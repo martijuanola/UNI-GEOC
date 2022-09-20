@@ -36,7 +36,7 @@ Note: show result by coloring each point differently depending on its situation 
 //========= Auxiliary objects and data =========//
 
 // Important: these are the input data sets
-var inputJSONs = [inputJSON1,inputJSON2,inputJSON3] ; 
+var inputJSONs = [inputJSON1,inputJSON2,inputJSON3] ;
 
 var points = inputJSONs[0].points; // Default data set
 var triangle = inputJSONs[0].triangle;
@@ -85,7 +85,7 @@ function drawCanvas() {
   context1.clearRect(-canvas.width / 2, -canvas.height / 2, 2 * canvas.width, 2 * canvas.height);
   document.getElementById("result").innerHTML = "";
   // Draw stuff
-  drawPoints(context1, style, points, triangle); 
+  drawPoints(context1, style, points, triangle);
   drawTriangle(context1, style, triangle);
 
 }
@@ -118,7 +118,7 @@ function drawTriangle(ctx, style, t) {
 function drawPoints(ctx, style, points, triangle) {
 
 	for (var i = 0; i < points.length; i++) {
-	
+
 		var result = classifyPoint(points[i], triangle);
 		style.point.fill = result.color;
 		style.point.color = result.color;
@@ -145,6 +145,25 @@ function changeDataSet() {
 }
 
 //========= Your code somewhere here =========//
+
+/*
+- Point is inside:
+    All OT over all 3 sides should output the same sign(should also be different than 0)
+    Will be +/- depending if sides are in clockwise or anticlockwise
+
+- Point is outside:
+    Different signed OT and no =0
+    1 OT =0, 1 OT +, 1 OT -
+    ??, 1 OT +, 1 OT -
+
+- Point is part of the segmets of the triangle:
+    - Is a vertex
+          2 OT =0
+          Compare points
+    - Is not
+          1 OT =0, 2 equals
+          Else
+*/
 
 // TODO: Add your code here to classify the point w.r.t. the triangle
 function classifyPoint(p, triangle) {
