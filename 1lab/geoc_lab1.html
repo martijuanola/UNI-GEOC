@@ -10,16 +10,13 @@ Last mouse position on canvas: <span id="mousepos"></span>
 <canvas id="canvas" width="1200" height="800"></canvas>
 <br>
 
-
 <script type="text/javascript" src="TestLab1.json.js"></script>
+<script type="text/javascript" src="math.js"></script>
 
-
-
-<h2>Result of (an absurd) intersection classification</h2>
+<h2>Result of the intersection classification</h2>
 <span id="result"></span>
 
-<script type="text/javascript">
-
+<script type="text/javascript" >
 //========= Auxiliary objects and data =========//
 
 // Important: this is the input
@@ -29,7 +26,7 @@ var segments = inputJSON.segments; // Requires inputJSON variable set in file
 var points = [];
 // See names colors at https://www.w3schools.com/colors/colors_names.asp
 // Add as many colors as needed to classify all intersection types
-var colors = ['Blue', 'Red', 'Green', 'Cyan', 'DarkOrange', 'Magenta', 'RosyBrown'];
+var colors = ['Blue', 'Red', 'Green', 'Cyan', 'DarkOrange', 'Magenta', 'RosyBrown', 'SaddleBrown', 'Chartreuse', 'DarkSeaGreen'];
 
 // default styles
 style = {
@@ -50,7 +47,6 @@ style = {
     arc2: 2 * Math.PI
   }
 }
-
 
 
 context1 = canvas.getContext("2d");
@@ -107,7 +103,6 @@ function drawSegment(ctx, style, segment, lineColor) {
 // Draws all segments
 function drawSegments(ctx, style, segments) {
 	//For each pair draw pair after classifying intersection
-
 	for (var i = 0; i < segments.length; i=i+2) {
 		// Classify intersection and obtain color to draw pair of segments
 		var intersectionClass = classifyIntersection(segments[i], segments[i+1]);
@@ -136,10 +131,13 @@ S_b  (bsx,bsy), (bex,bey)
 
 Segment intersection classification:
 - No Intersection:
-  - Parallel but different
+  - Colinear
       2 OT(from A to both points of B) results <0 or >0
+  - Not Colinear
 - Finite Intersections:
   - Endpoint to Endpoint
+      - Colinear
+      - Not Colinear
   - Endpoint to Middlepoint
   - Middlepoint to Middlepoint
 - Infinie inersections Identical Segments (Parallel):
@@ -150,21 +148,136 @@ Segment intersection classification:
       Same points
 */
 
-// TODO: Add your code here to classify all possible segment intersection types
+
+/*
+* s Segment
+* r Point
+* return 3 options:
+*  1 -> r is to de LEFT of the segment s
+*  0 -> r is colinear to the segment s
+* -1 -> r is to de RIGHT of the segment s
+*/
+function orientationTest(s, r) {
+  p = s.from;
+  q = s.to;
+  det = ((q.x-p.x)*(r.y-p.y)) - ((r.x-p.x)*(q.y-p.y));
+  if(det > 0) return 1;
+  else if (det < 0) return -1;
+  else return det;
+}
+
+/*
+* Points of the segments get swaped to follow ascendentend order by x and y components.
+*/
+function sortPoints(s) {
+  if(s.from.x > s.to.x || (s.from.x == s.to.x && s.from.y > s.to.y)) {
+    [s.from, s.to] = [s.to, s.from];
+  }
+}
+
+function getBaseMatrix(s) {
+  v = [s.to.x-s.from.x, s.to.y-s.from.y];
+  p = [v[1], -v[0]];
+  return math.inv(math.transpose([v,p]));
+}
+
+function changeBaseOfSegment(newBase, s) {
+  p1 = changeBaseOfPoint(newBase, s.from);
+  p2 = changeBaseOfPoint(newBase, s.to);
+  return {from: p1, to: p2};
+}
+
+function changeBaseOfPoint(newBase, p) {
+  aux = math.multiply(newBase,[p.x, p.y]);
+  return {'x':aux[0], 'y':aux[1]};
+}
+
+function equalPoints(p1, p2) {
+  return p1.x == p2.x && p1.y == p2.y;
+}
+
+/*
+* Returns description for every intersectionType
+*/
+function getTypeDescription(intersectionType) {
+  switch(intersectionType) {
+    case 0: return "Segments do NOT intersect!";
+    case 1: return "One segment CONTAINS the other.";
+    case 2: return "Segments intersect in a INFINITE set of points(new segment).";
+    case 3: return "Segments are COLINEAR and intersect in a SINGLE POINT(edge to edge).";
+    case 4: return "Segments intersect in a SINGLE POINT(middlepoint to middlepoint).";
+    case 5: return "Segments are COLINEAR and do not intersect!";
+    case 6: return "IDENTICAL segments!";
+    case 7: return "Segments are NOT COLINEAR and intersect in a SINGLE POINT(edge to edge).";
+    case 8: return "Segments are NOT COLINEAR and intersect in a SINGLE POINT(middlepoint to edge).";
+  }
+}
+
 function classifyIntersection(s1, s2) {
 	var intersectionType, intersectionTypeDescription;
-	// Dummy code: an absurd classification criterion
-	if (s1.from.x < s2.from.x)  {
-		intersectionType = 1;
-		intersectionTypeDescription = "s1 starts to the left of s2";
-		}
-	else {
-		intersectionType = 2;
-		intersectionTypeDescription = "s1 does not start to the left of s2";
-		}
 
-	// Return object with two fields: a numbered type, and a description
-	return {"type": intersectionType, "description": intersectionTypeDescription} ;
+  sortPoints(s1);
+  sortPoints(s2);
+
+  ot1 = orientationTest(s1, s2.from);
+  ot2 = orientationTest(s1, s2.to);
+
+  ot3 = orientationTest(s2, s1.from);
+  ot4 = orientationTest(s2, s1.to);
+
+  //COLINEAR
+  if(ot1 == 0 && ot2 == 0) {
+    newBase = getBaseMatrix(s1);
+    cb1 = changeBaseOfSegment(newBase, s1);
+    cb2 = changeBaseOfSegment(newBase, s2);
+
+    if(cb2.to.x < cb1.from.x) intersectionType = 5;
+    else if(cb2.to.x == cb1.from.x) intersectionType = 3;
+    else if(cb2.to.x <= cb1.to.x) {
+      if(cb2.to.x == cb1.to.x && cb1.from.x == cb1.from.x) intersectionType = 6;
+      else if(cb2.from.x < cb1.from.x) intersectionType = 2;
+      else intersectionType = 1;
+    } else {
+      if(cb2.from.x <= cb1.from.x) intersectionType = 1;
+      else if(cb2.from.x < cb1.to.x) intersectionType = 2;
+      else if(cb2.from.x == cb1.to.x) intersectionType = 3;
+      else intersectionType = 5;
+    }
+  } //1 POINT IS COLINEAR
+  else if(ot1 == 0 || ot2 == 0 || ot3 == 0 || ot4 == 0) {
+    var point;
+    var segment;
+    if(ot1 == 0) {
+      point = s2.from;
+      segment = s1;
+    } else if(ot2 == 0) {
+      point = s2.to;
+      segment = s1;
+    } else if(ot3 == 0) {
+      point = s1.from;
+      segment = s2;
+    } else if(ot4 == 0) {
+      point = s1.to;
+      segment = s2;
+    }
+   if(equalPoints(segment.from, point) || equalPoints(segment.to, point)) intersectionType = 7;
+   else {
+     newBase = getBaseMatrix(segment);
+     cbSegment = changeBaseOfSegment(newBase, segment);
+     cbpoint = changeBaseOfPoint(newBase, point);
+     if(cbpoint.x < cbSegment.from.x || cbpoint.x > cbSegment.to.x) intersectionType = 0;
+     else intersectionType = 8;
+   }
+  } //NOT COLINEAR
+  else {
+    if(ot1 == ot2 || ot3 == ot4) intersectionType = 0;
+    else intersectionType = 4;
+  }
+
+	return {
+    "type": intersectionType,
+    "description": getTypeDescription(intersectionType)
+  };
 }
 
 
