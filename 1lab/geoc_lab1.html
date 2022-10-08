@@ -11,7 +11,8 @@ Last mouse position on canvas: <span id="mousepos"></span>
 <br>
 
 <script type="text/javascript" src="TestLab1.json.js"></script>
-<script type="text/javascript" src="math.js"></script>
+<script type="text/javascript" src="../math.js"></script> <!-- For me -->
+<script type="text/javascript" src="math.js"></script> <!-- For you -->
 
 <h2>Result of the intersection classification</h2>
 <span id="result"></span>
@@ -200,7 +201,7 @@ function getTypeDescription(intersectionType) {
 }
 
 function classifyIntersection(s1, s2) {
-	var intersectionType, intersectionTypeDescription;
+	var intersectionType;
 
   sortPoints(s1);
   sortPoints(s2);
