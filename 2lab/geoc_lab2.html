@@ -41,7 +41,7 @@ var triangle = inputJSONs[0].triangle;
 
 // See names colors at https://www.w3schools.com/colors/colors_names.asp
 // Some colors you could use
-var colors = ['Blue', 'Red', 'Green', 'Cyan', 'DarkOrange', 'Magenta', 'RosyBrown'];
+var colors = ['Black', 'Red', 'Green', 'Blue', 'Purple'];
 
 // default styles
 style = {
@@ -149,25 +149,6 @@ function getColorDescription(color) {
     case 4: return "The point is part of 2 SEGMENT of the triangle(coincides with a vertex of the triangle)";
   }
 }
-
-/*
-- Point is inside:
-    All OT over all 3 sides should output the same sign(should also be different than 0)
-    Will be +/- depending if sides are in clockwise or anticlockwise
-
-- Point is outside:
-    Different signed OT and no =0
-    1 OT =0, 1 OT +, 1 OT -
-    ??, 1 OT +, 1 OT -
-
-- Point is part of the segmets of the triangle:
-    - Is a vertex
-          2 OT =0
-          Compare points
-    - Is not
-          1 OT =0, 2 equals
-          Else
-*/
 
 /**
 * Returns if 2 points of the plane are equal.
