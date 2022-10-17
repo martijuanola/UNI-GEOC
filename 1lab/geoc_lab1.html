@@ -144,7 +144,7 @@ function orientationTest(s, r) {
 * Points of the segments get swaped to follow ascendentend order by x and y components.
 */
 function sortPoints(s) {
-  if(s.from.x > s.to.x || (s.from.x == s.to.x && s.from.y > s.to.y)) {
+  if(s.from.x > s.to.x || (s.from.x == s.to.x && s.from.y > s.to.y)) {
     [s.from, s.to] = [s.to, s.from];
   }
 }
