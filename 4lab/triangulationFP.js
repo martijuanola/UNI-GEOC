@@ -37,29 +37,29 @@ function computeTriangulation(points) {
 	const fixedPoint = addEncolsingTriangle(points, n, outputTriangles, DCEL);
 	let fixedPointFaceID = 0; 
 	
-	console.log("ENCLOSING TRIANGLE CALCULATED");
-	console.log("DCEL", DCEL);
-	console.log("FIXED POINT", fixedPoint);
+	// console.log("ENCLOSING TRIANGLE CALCULATED");
+	// console.log("DCEL", DCEL);
+	// console.log("FIXED POINT", fixedPoint);
 
 	console.log("TRAINGULATION STARTED!");
 	//TODO: Iterate over all sorted points:
 	for (let i = 0; i < n; i++) { //should not get last 3 added points
-		console.log("----------------------");
-		console.log("POINT " + i);
+		// console.log("----------------------");
+		// console.log("POINT " + i);
 		let faceID = findFaceID(points[i], fixedPoint, fixedPointFaceID, DCEL);
 		fixedPointFaceID = updateDCEL(i, points[i], faceID, fixedPoint, fixedPointFaceID, DCEL);
-		console.log("UPDATED DCEL", DCEL);
-		console.log("NEW FIXED POINT FACE ID", fixedPointFaceID);
-		console.log("----------------------");
+		// console.log("UPDATED DCEL", DCEL);
+		// console.log("NEW FIXED POINT FACE ID", fixedPointFaceID);
+		// console.log("----------------------");
 	}
 
 	console.log("TRAINGULATION DONE!");
-	console.log("DCEL", DCEL);
+	// console.log("DCEL", DCEL);
 	
 	//TODO: Traverse the faces structure and add all faces as triangles
 	getTriangles(outputTriangles, DCEL);
 
-	console.log("TRIANGLES", DCEL);
+	// console.log("TRIANGLES", DCEL);
 
 	console.log("END");
 	return outputTriangles;
@@ -154,7 +154,7 @@ function findFaceID(p, fp, fpFaceID, DCEL) {
 	let currentFace = DCEL.faces[currentFaceID];
 	while (!found && (iter < MAX_ITER)) {
 		const containsCheck = pointInTriangle(p, getTriangleFromFace(currentFace, DCEL));
-		console.log("\tcontainsCheck = " + containsCheck + " | in face " + currentFaceID);
+		// console.log("\tcontainsCheck = " + containsCheck + " | in face " + currentFaceID);
 		if (containsCheck > 0) {
 			found = true;
 			if (containsCheck == 2) {
@@ -175,13 +175,13 @@ function findFaceID(p, fp, fpFaceID, DCEL) {
 				const et = DCEL.edges[currentEdge.eTID];
 				if (prevFaceID != et.fRID) {
 					const intersectionCheck = segmentsIntersecction(s1, s2);
-					console.log("\tintersectionCheck = " + intersectionCheck + " | to face " + et.fRID);
+					// console.log("\tintersectionCheck = " + intersectionCheck + " | to face " + et.fRID);
 					if (intersectionCheck > 1) {
 						prevFaceID = currentFaceID;
 						currentFaceID = et.fRID;
 						currentFace = DCEL.faces[currentFaceID];
 						edgeFound = true;
-						console.log(prevFaceID + " --> " + currentFaceID);
+						// console.log(prevFaceID + " --> " + currentFaceID);
 					}
 				}
 				
@@ -279,11 +279,11 @@ function updateDCEL(pIndex, newPoint, f1ID, fp, fixedPointFaceID, DCEL) {
 
 	//Modify fixedPointFaceID
 	if(pointInTriangle(fp, getTriangleFromFace(DCEL.faces[numF], DCEL)) > 0) {
-		console.log("FPFID changed(1)");
+		// console.log("FPFID changed(1)");
 		return numF;
 	}
 	else if(pointInTriangle(fp, getTriangleFromFace(DCEL.faces[numF+1], DCEL)) > 0) {
-		console.log("FPFID changed(2)");
+		// console.log("FPFID changed(2)");
 		return numF+1;
 	}
 	else return fixedPointFaceID;

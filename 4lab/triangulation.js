@@ -20,7 +20,6 @@
  * TREE = ["fID": int, "leafID": [int]}]
  */
 
-
 /**
  Triangles should be return as arrays of array of indexes
  e.g., [[1,2,3],[2,3,4]] encodes two triangles, where the indices are relative to the array points
@@ -37,29 +36,33 @@ function computeTriangulation(points) {
 	addEncolsingTriangle(points, n, outputTriangles, DCEL, TREE);
 	
 	console.log("ENCLOSING TRIANGLE CALCULATED");
-	console.log("DCEL", DCEL);
-	console.log("TREE", TREE);
+	// console.log("DCEL", DCEL);
+	// console.log("TREE", TREE);
 
 	console.log("TRAINGULATION STARTED!");
 	for (let i = 0; i < n; i++) {
-		console.log("----------------------");
-		console.log("POINT " + i);
-		let edgeIntersection = -1;
+		// console.log("----------------------");
+		// console.log("POINT " + i);
+		
 		let faceID = findFaceID(points[i], TREE);
-		/*if(pointInTriangle(points[i], getTriangleFromFace(DCEL.faces[faceID], DCEL))) {
-			updateStructuresDegen();
+		if (pointInTriangle(points[i], getTriangleFromFace(DCEL.faces[faceID], DCEL)) == 2) {
+			// console.log("DEGENERATE CASE");
+			let edgeID = findTouchingFace(faceID, points[i], DCEL);
+			updateStructuresDegen(i, points[i], faceID, edgeID, DCEL, TREE);
 		}
-		else */updateStructures(i, points[i], faceID, DCEL, TREE);
-		console.log("UPDATED DCEL", DCEL);
-		console.log("----------------------");
+		else updateStructures(i, points[i], faceID, DCEL, TREE);
+		
+		// console.log("UPDATED DCEL", DCEL);
+		// console.log("UPDATED TREE", TREE);
+		// console.log("----------------------");
 	}
 
 	console.log("TRAINGULATION DONE!");
-	console.log("DCEL", DCEL);
+	// console.log("DCEL", DCEL);
 	
 	getTriangles(outputTriangles, DCEL);
 
-	console.log("TRIANGLES", outputTriangles);
+	// console.log("TRIANGLES", outputTriangles);
 	console.log("END");
 	return outputTriangles;
 }
@@ -240,8 +243,125 @@ function updateStructures(pIndex, newPoint, f1ID, DCEL, TREE) {
 	return;
 }
 
-function updateStructuresDegen() {
-	//TODO;
+function findTouchingFace(faceID, p, DCEL) {
+	const face = DCEL.faces[faceID];
+	let currentEdgeID = face.edgeID;
+	let currentEdge = DCEL.edges[currentEdgeID];
+	let reverseEdge = DCEL.edges[currentEdge.eTID];
+	let currentFaceID = reverseEdge.fRID;
+
+	let found = false;
+	for (let i = 0; i < 3 && !found; i++) {
+		if (pointInTriangle(p, getTriangleFromFace(DCEL.faces[currentFaceID], DCEL)) == 2) {
+			found = true;
+		}
+		else {
+			currentEdgeID = currentEdge.eNID;
+			currentEdge = DCEL.edges[currentEdgeID];
+			reverseEdge = DCEL.edges[currentEdge.eTID];
+			currentFaceID = reverseEdge.fRID;
+		}
+	}
+
+	return currentEdgeID;
+}
+
+function updateStructuresDegen(pIndex, newPoint, f1ID, e0ID, DCEL, TREE) {
+	const numV = DCEL.vertexs.length;
+	const numE = DCEL.edges.length;
+	const numF = DCEL.faces.length;
+
+	let e0 = DCEL.edges[e0ID];
+	const e0IDT = e0.eTID;
+	let e0T = DCEL.edges[e0IDT];
+
+	const e1ID = e0.eNID;
+	let e1 = DCEL.edges[e1ID];
+	const e2ID = e1.eNID;
+	let e2 = DCEL.edges[e2ID];
+	const e3ID = e0T.eNID;
+	let e3 = DCEL.edges[e3ID];
+	const e4ID = e3.eNID;
+	let e4 = DCEL.edges[e4ID];
+
+	const e5ID = numE;
+	const e6ID = numE+1;
+	const e7ID = numE+2;
+	const e5IDT = numE+3;
+	const e6IDT = numE+4;
+	const e7IDT = numE+5;
+
+	const v1ID = e1.vBID;
+	const v2ID = e2.vBID;
+	const v3ID = e3.vBID;
+	const v4ID = e4.vBID;
+	let v1 = DCEL.vertexs[v1ID];
+	const v5ID = numV;
+
+	let f1 = DCEL.faces[f1ID];
+	const f2ID = e0T.fRID;
+	let f2 = DCEL.faces[f2ID];
+
+	const numT = TREE.length;
+	let leaf1 = TREE[f1.leafID];
+	let leaf2 = TREE[f2.leafID];
+
+
+	//VERTEXS
+	DCEL.vertexs.push({"x": newPoint.x, "y": newPoint.y, "edgeID": e0IDT, "pointsIndex": pIndex});
+	v1.edgeID = e1ID;
+
+	//FACES
+	//old
+	f1.edgeID = e2ID;
+	f1.leafID = numT;
+	f2.edgeID = e3ID;
+	f2.leafID = numT+2;
+	//new
+	DCEL.faces.push({"edgeID": e5ID, "leafID": numT+1});
+	DCEL.faces.push({"edgeID": e7ID, "leafID": numT+3});
+	let f3 = DCEL.faces[numF];
+	let f4 = DCEL.faces[numF+1];
+	const f3ID = numF;
+	const f4ID = numF+1;
+
+	//EDGES e = {"vBID": int, "fRID": int, "eNID": int, "eTID": int}
+
+	e0.eNID = e5IDT;
+	e0T.vBID = v5ID;
+	e0T.eNID = e3ID;
+
+	e1.fRID = f3ID;
+	e1.eNID = e5ID;
+
+	//E2 no cal
+
+	e3.eNID = e6ID;
+
+	e4.fRID = f4ID;
+	e4.eNID = e7ID;
+
+	DCEL.edges.push({"vBID": v2ID, "fRID": f3ID, "eNID": e7IDT, "eTID": e5IDT}); //e5
+	DCEL.edges.push({"vBID": v4ID, "fRID": f2ID, "eNID": e0IDT, "eTID": e6IDT}); //e6
+	DCEL.edges.push({"vBID": v1ID, "fRID": f4ID, "eNID": e6IDT, "eTID": e7IDT}); //e7
+	
+	DCEL.edges.push({"vBID": v5ID, "fRID": f1ID, "eNID": e2ID, "eTID": e5ID}); //e5T
+	DCEL.edges.push({"vBID": v5ID, "fRID": f4ID, "eNID": e4ID, "eTID": e6ID}); //e6T
+	DCEL.edges.push({"vBID": v5ID, "fRID": f3ID, "eNID": e1ID, "eTID": e7ID}); //e7T
+	
+	//modify tree
+	leaf1.fID = -1;
+	leaf2.fID = -1;
+
+	leaf1.leafID.push(numT);
+	leaf1.leafID.push(numT+1);
+	TREE.push({"fID": f1ID, "triangle": getTriangleFromFace(f1, DCEL), "leafID": []});
+	TREE.push({"fID": f3ID, "triangle": getTriangleFromFace(f3, DCEL), "leafID": []});
+
+	leaf2.leafID.push(numT+2);
+	leaf2.leafID.push(numT+3);
+	TREE.push({"fID": f2ID, "triangle": getTriangleFromFace(f2, DCEL), "leafID": []});
+	TREE.push({"fID": f4ID, "triangle": getTriangleFromFace(f4, DCEL), "leafID": []});
 }
 
 /****************************************************/
@@ -284,47 +404,6 @@ function getPoint(x, y) {
 /************ LABS -- GENERAL FUNCTIONS *************/
 /****************************************************/
 
-
-/*
-* Points of the segments get swaped to follow ascendentend order by x and y components.
-*/
-function sortPoints(s) {
-  if(s.from.x > s.to.x || (s.from.x == s.to.x && s.from.y > s.to.y)) {
-    [s.from, s.to] = [s.to, s.from];
-  }
-}
-
-/*
-* Returns inverse transposed matrix to tranform segments to new coordinates
-* where the first component is s as a vector.
-*/
-function getBaseMatrix(s) {
-  const v = [s.to.x-s.from.x, s.to.y-s.from.y];
-  const p = [v[1], -v[0]];
-  return math.inv(math.transpose([v,p]));
-}
-
-/*
-* Change base of segment according to newBase matrix
-*/
-function changeBaseOfSegment(newBase, s) {
-  const p1 = changeBaseOfPoint(newBase, s.from);
-  const p2 = changeBaseOfPoint(newBase, s.to);
-  return {from: p1, to: p2};
-}
-
-/*
-* Change base of point according to newBase matrix
-*/
-function changeBaseOfPoint(newBase, p) {
-  const aux = math.multiply(newBase,[p.x, p.y]);
-  return {'x':aux[0], 'y':aux[1]};
-}
-
-
-/***********************/
-
-
 /**
 * Returns if 2 points of the plane are equal.
 **/
@@ -362,86 +441,6 @@ function orientationTest(s, r) {
   else return det;
 }
 
-/****************************************************/
-/********* LAB1 -- SEGMENT INTERSECTION *************/
-/****************************************************/
-
-/**
- * 0 --> Segments do NOT intersect!
- * 1 --> Segments are COLINEAR and do not intersect!
- * 
- * 2 --> Segments intersect in a INFINITE set of points(new segment).
- * 3 --> Segments are COLINEAR and intersect in a SINGLE POINT(edge to edge).
- * 4 --> Segments intersect in a SINGLE POINT(middlepoint to middlepoint).
- * 5 --> One segment CONTAINS the other.
- * 6 --> IDENTICAL segments!
- * 7 --> Segments are NOT COLINEAR and intersect in a SINGLE POINT(edge to edge).
- * 8 --> Segments are NOT COLINEAR and intersect in a SINGLE POINT(middlepoint to edge).
- * 
- * 5 -> 1 should be changed
- */
-function segmentsIntersecction(s1, s2) {
-	let intersectionType;
-
-	sortPoints(s1);
-	sortPoints(s2);
-
-	const ot1 = orientationTest(s1, s2.from);
-	const ot2 = orientationTest(s1, s2.to);
-	const ot3 = orientationTest(s2, s1.from);
-	const ot4 = orientationTest(s2, s1.to);
-
-	//COLINEAR
-	if(ot1 == 0 && ot2 == 0) {
-		const newBase = getBaseMatrix(s1);
-		const cb1 = changeBaseOfSegment(newBase, s1);
-		const cb2 = changeBaseOfSegment(newBase, s2);
-
-		if(cb2.to.x < cb1.from.x) intersectionType = 1;
-		else if(cb2.to.x == cb1.from.x) intersectionType = 3;
-		else if(cb2.to.x <= cb1.to.x) {
-			if(cb2.to.x == cb1.to.x && cb1.from.x == cb1.from.x) intersectionType = 6;
-			else if(cb2.from.x < cb1.from.x) intersectionType = 2;
-			else intersectionType = 5;
-		} else {
-			if(cb2.from.x <= cb1.from.x) intersectionType = 5;
-			else if(cb2.from.x < cb1.to.x) intersectionType = 2;
-			else if(cb2.from.x == cb1.to.x) intersectionType = 3;
-			else intersectionType = 1;
-		}
-	} //1 POINT IS COLINEAR
-	else if(ot1 == 0 || ot2 == 0 || ot3 == 0 || ot4 == 0) {
-		let point;
-		let segment;
-		if(ot1 == 0) {
-			point = s2.from;
-			segment = s1;
-		} else if(ot2 == 0) {
-			point = s2.to;
-			segment = s1;
-		} else if(ot3 == 0) {
-			point = s1.from;
-			segment = s2;
-		} else if(ot4 == 0) {
-			point = s1.to;
-			segment = s2;
-		}
-		if(equalPoints(segment.from, point) || equalPoints(segment.to, point)) intersectionType = 7;
-		else {
-			const newBase = getBaseMatrix(segment);
-			const cbSegment = changeBaseOfSegment(newBase, segment);
-			const cbpoint = changeBaseOfPoint(newBase, point);
-			if(cbpoint.x < cbSegment.from.x || cbpoint.x > cbSegment.to.x) intersectionType = 0;
-			else intersectionType = 8;
-		}
-	} //NOT COLINEAR
-	else {
-		if(ot1 == ot2 || ot3 == ot4) intersectionType = 0;
-		else intersectionType = 4;
-	}
-
-	return intersectionType;
-}
 
 /****************************************************/
 /********** LAB2 -- POINT IN TRIANGLE ***************/
