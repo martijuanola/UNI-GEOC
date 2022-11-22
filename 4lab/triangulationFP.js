@@ -11,13 +11,11 @@
  * 
  * DCEL = {"vertexs": VERTEXS[], "faces": FACES[], "edges": EDGES[]}
  *		VERTEXS v = {"x": int, "y": int, "edgeID": int, "pointsIndex"; int}
- *		FACES 	f = {"edgeID": int, "leafID": int}
+ *		FACES 	f = {"edgeID": int}
  *		EDGES 	e = {"vBID": int, "fRID": int, "eNID": int, "eTID": int}
  *	---	ID's son posicions de l'array(comencen per 0)
  * 	--- Faces' edges have the face as the fR attribute (clockwise rotation)
  * 	--- Vertexs' edges are outgoing edges
- * 	
- * TREE = ["fID": int, "leafID": [int]}]
  */
 
 
@@ -31,35 +29,38 @@ function computeTriangulation(points) {
 	const n = points.length;
 	let outputTriangles = [];
 
+	//TODO: create empty datastructures
 	let DCEL = {"vertexs": [], "faces": [], "edges": []}
-	let TREE = [];
 
-	addEncolsingTriangle(points, n, outputTriangles, DCEL, TREE);
+	//TODO: Calculate & Add encolsing triangle
+	//TODO: Add/choose fixed point
+	const fixedPoint = addEncolsingTriangle(points, n, outputTriangles, DCEL);
+	let fixedPointFaceID = 0; 
 	
 	console.log("ENCLOSING TRIANGLE CALCULATED");
 	console.log("DCEL", DCEL);
-	console.log("TREE", TREE);
+	console.log("FIXED POINT", fixedPoint);
 
 	console.log("TRAINGULATION STARTED!");
-	for (let i = 0; i < n; i++) {
+	//TODO: Iterate over all sorted points:
+	for (let i = 0; i < n; i++) { //should not get last 3 added points
 		console.log("----------------------");
 		console.log("POINT " + i);
-		let edgeIntersection = -1;
-		let faceID = findFaceID(points[i], TREE);
-		/*if(pointInTriangle(points[i], getTriangleFromFace(DCEL.faces[faceID], DCEL))) {
-			updateStructuresDegen();
-		}
-		else */updateStructures(i, points[i], faceID, DCEL, TREE);
+		let faceID = findFaceID(points[i], fixedPoint, fixedPointFaceID, DCEL);
+		fixedPointFaceID = updateDCEL(i, points[i], faceID, fixedPoint, fixedPointFaceID, DCEL);
 		console.log("UPDATED DCEL", DCEL);
+		console.log("NEW FIXED POINT FACE ID", fixedPointFaceID);
 		console.log("----------------------");
 	}
 
 	console.log("TRAINGULATION DONE!");
 	console.log("DCEL", DCEL);
 	
+	//TODO: Traverse the faces structure and add all faces as triangles
 	getTriangles(outputTriangles, DCEL);
 
-	console.log("TRIANGLES", outputTriangles);
+	console.log("TRIANGLES", DCEL);
+
 	console.log("END");
 	return outputTriangles;
 }
@@ -86,7 +87,7 @@ const noise = 1;
  * @param      {Array}   edges            The edges
  * @return     {Object}  Fixed point
  */
-function addEncolsingTriangle(points, n, outputTriangles, DCEL, TREE) {
+function addEncolsingTriangle(points, n, outputTriangles, DCEL) {
 	
 	const eBox = calculateEnclosingBox(points);
 
@@ -105,7 +106,7 @@ function addEncolsingTriangle(points, n, outputTriangles, DCEL, TREE) {
 	DCEL.vertexs.push({"x": points[n+1].x, "y": points[n+1].y, "edgeID": 2, "pointsIndex": n+1});
 	DCEL.vertexs.push({"x": points[n+2].x, "y": points[n+2].y, "edgeID": 4, "pointsIndex": n+2});
 
-	DCEL.faces.push({"edgeID": 0, "leafID": 0});
+	DCEL.faces.push({"edgeID": 0});
 
 	DCEL.edges.push({"vBID": 0, "fRID": 0, "eNID": 2, "eTID": 1});
 	DCEL.edges.push({"vBID": 1, "fRID": -1, "eNID": 5, "eTID": 0});
@@ -116,8 +117,9 @@ function addEncolsingTriangle(points, n, outputTriangles, DCEL, TREE) {
 	DCEL.edges.push({"vBID": 2, "fRID": 0, "eNID": 0, "eTID": 5});
 	DCEL.edges.push({"vBID": 0, "fRID": -1, "eNID": 1, "eTID": 4});
 
-	TREE.push({"fID": 0, "triangle": getTriangleFromFace(DCEL.faces[0], DCEL), "leafID": []});
-	return;
+	//Return middle point to use as the fixed point
+	//TODO: remove noise
+	return getPoint(midx+noise, midy+noise);
 }
 
 /**
@@ -142,37 +144,90 @@ function calculateEnclosingBox(points) {
 /***************** TRIANGULATION ********************/
 /****************************************************/
 
-function findFaceID(p, TREE) {
+function findFaceID(p, fp, fpFaceID, DCEL) {
+	const MAX_ITER = DCEL.faces.length;
+	let iter = 0;
 
-	let currentLeafID = 0;
-	let currentLeaf = TREE[currentLeafID];
-	let nSubs = currentLeaf.leafID.length;
-	while (nSubs != 0) {
-		let found = false;
-		for (let i = 0; i < nSubs && !found; i++) {
-			let nextLeaf = TREE[currentLeaf.leafID[i]];
-			const containsCheck = pointInTriangle(p, nextLeaf.triangle);
-			if (containsCheck > 0) {
-				found = true;
-				currentLeafID = currentLeaf.leafID[i];
-				currentLeaf = nextLeaf;
-				nSubs = currentLeaf.leafID.length;
+	let found = false;
+	let currentFaceID = fpFaceID;
+	let prevFaceID = -1;
+	let currentFace = DCEL.faces[currentFaceID];
+	while (!found && (iter < MAX_ITER)) {
+		const containsCheck = pointInTriangle(p, getTriangleFromFace(currentFace, DCEL));
+		console.log("\tcontainsCheck = " + containsCheck + " | in face " + currentFaceID);
+		if (containsCheck > 0) {
+			found = true;
+			if (containsCheck == 2) {
+				//TODO: Special case!!!
+				//
 			}
+			// else if (containsCheck == 3) {
+			// 	console.log("Something went wrong! Repeated Point!");
+			// 	throw "REPEATED POINT";
+			// }
+		}
+		else {
+			let edgeFound = false;
+			let currentEdge = DCEL.edges[currentFace.edgeID];
+			for (let i = 0; i < 3 && !edgeFound; i++) {
+				const s1 = getSegmentFromEdge(currentEdge, DCEL);
+				const s2 = getSegment(fp, p);
+				const et = DCEL.edges[currentEdge.eTID];
+				if (prevFaceID != et.fRID) {
+					const intersectionCheck = segmentsIntersecction(s1, s2);
+					console.log("\tintersectionCheck = " + intersectionCheck + " | to face " + et.fRID);
+					if (intersectionCheck > 1) {
+						prevFaceID = currentFaceID;
+						currentFaceID = et.fRID;
+						currentFace = DCEL.faces[currentFaceID];
+						edgeFound = true;
+						console.log(prevFaceID + " --> " + currentFaceID);
+					}
+				}
+				
+				if(!edgeFound) currentEdge = DCEL.edges[currentEdge.eNID];
+			}
+
+			if (!edgeFound) {
+				throw "NEW FACE NOT FOUND\nNew face not found for p = " + JSON.stringify(p);
+			}
+			iter++;
 		}
 	}
-	if (currentLeaf.fID == -1) throw "Last leaf didn't have a fID";
-	return currentLeaf.fID;
+
+	if (iter >= MAX_ITER) {
+		throw "MAX ITERATIONS\n for p = " + JSON.stringify(p);
+	}
+
+	return currentFaceID;
 }
 
-function updateStructures(pIndex, newPoint, f1ID, DCEL, TREE) {
+
+/**
+ * Updates DCEL adding 1 vertex, 2 new faces and 6 new edges and updating necessary pointers.
+ * It also changes de face
+ * 
+ * f1 --> e1
+ * 
+ *      *
+ *     / \
+ *   e1   e2
+ *	 /     \
+ *	*___e3__*
+ *
+ * @param      {Point}  p            	   Added point/vertex
+ * @param      {Face}  f          	       Face that need to be modified
+ * @param      {<type>}  fp                Fixed point
+ * @param      {<type>}  fixedPointFaceID  The fixed point face id
+ * @param      {<type>}  DCEL              The dcel
+ */
+function updateDCEL(pIndex, newPoint, f1ID, fp, fixedPointFaceID, DCEL) {
+
 	const numV = DCEL.vertexs.length;
 	const numE = DCEL.edges.length;
 	const numF = DCEL.faces.length;
 
-	let f1 = DCEL.faces[f1ID];
-
-	const numT = TREE.length;
-	let leaf = TREE[f1.leafID];
+	const f1 = DCEL.faces[f1ID];
 
 	let e1 = DCEL.edges[f1.edgeID];
 	let e2 = DCEL.edges[e1.eNID];
@@ -184,6 +239,7 @@ function updateStructures(pIndex, newPoint, f1ID, DCEL, TREE) {
 	const v1ID = e1.vBID;
 	const v2ID = e2.vBID;
 	const v3ID = e3.vBID;
+
 
 	const v4ID = numV;
 	
@@ -201,11 +257,8 @@ function updateStructures(pIndex, newPoint, f1ID, DCEL, TREE) {
 	DCEL.vertexs.push({"x": newPoint.x, "y": newPoint.y, "edgeID": e4IDT, "pointsIndex": pIndex});
 	
 	//Add faces
-	DCEL.faces.push({"edgeID": e2ID, "leafID": numT+1});
-	DCEL.faces.push({"edgeID": e3ID, "leafID": numT+2});
-
-	let f2 = DCEL.faces[f2ID];
-	let f3 = DCEL.faces[f3ID];
+	DCEL.faces.push({"edgeID": e2ID});
+	DCEL.faces.push({"edgeID": e3ID});
 	
 	//Add edges
 	DCEL.edges.push({"vBID": v1ID, "fRID": f3ID, "eNID": e6IDT, "eTID": e4IDT});
@@ -224,24 +277,16 @@ function updateStructures(pIndex, newPoint, f1ID, DCEL, TREE) {
 	e2.eNID = e6ID;
 	e3.eNID = e4ID;
 
-	//Modify things of tree
-	f1.leafID = numT;
-
-	leaf.leafID.push(numT);
-	leaf.leafID.push(numT+1);
-	leaf.leafID.push(numT+2);
-
-	leaf.fID = -1;
-
-	TREE.push({"fID": f1ID, "triangle": getTriangleFromFace(f1, DCEL), "leafID": []});
-	TREE.push({"fID": f2ID, "triangle": getTriangleFromFace(f2, DCEL), "leafID": []});
-	TREE.push({"fID": f3ID, "triangle": getTriangleFromFace(f3, DCEL), "leafID": []});
-
-	return;
-}
-
-function updateStructuresDegen() {
-	//TODO;
+	//Modify fixedPointFaceID
+	if(pointInTriangle(fp, getTriangleFromFace(DCEL.faces[numF], DCEL)) > 0) {
+		console.log("FPFID changed(1)");
+		return numF;
+	}
+	else if(pointInTriangle(fp, getTriangleFromFace(DCEL.faces[numF+1], DCEL)) > 0) {
+		console.log("FPFID changed(2)");
+		return numF+1;
+	}
+	else return fixedPointFaceID;
 }
 
 /****************************************************/
