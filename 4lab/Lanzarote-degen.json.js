@@ -1,4 +1,4 @@
-var inputJSON = {'point_radius':1, 'point_width':0.2,
+var inputJSON_lanzarote_degen = {'point_radius':1, 'point_width':0.2,
 'points':[{'x':609195.0, 'y':3195680.0, 'z':0.0},
 {'x':609195.0, 'y':3195720.0, 'z':0.0},
 {'x':611431.0, 'y':3192980.0, 'z':0.0},

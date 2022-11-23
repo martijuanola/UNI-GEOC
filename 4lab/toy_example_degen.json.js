@@ -1,4 +1,4 @@
-var inputJSON = {'point_radius':5, 'point_width':1,
+var inputJSON_toy_degen = {'point_radius':5, 'point_width':1,
 'points':[
 {'x':0, 'y':0, 'z':0.0},
 {'x':10, 'y':0, 'z':100.0},

@@ -25,29 +25,22 @@
  e.g., [[1,2,3],[2,3,4]] encodes two triangles, where the indices are relative to the array points
 **/
 function computeTriangulation(points) {
-	console.log("START");
-	const k = Math.floor(points.length/3);
 	const n = points.length;
-	let outputTriangles = [];
 
+	let outputTriangles = [];
 	let DCEL = {"vertexs": [], "faces": [], "edges": []}
 	let TREE = [];
 
 	addEncolsingTriangle(points, n, outputTriangles, DCEL, TREE);
-	
-	console.log("ENCLOSING TRIANGLE CALCULATED");
-	// console.log("DCEL", DCEL);
-	// console.log("TREE", TREE);
 
-	console.log("TRAINGULATION STARTED!");
 	for (let i = 0; i < n; i++) {
 		// console.log("----------------------");
 		// console.log("POINT " + i);
 		
-		let faceID = findFaceID(points[i], TREE);
+		const faceID = findFaceID(points[i], TREE);
 		if (pointInTriangle(points[i], getTriangleFromFace(DCEL.faces[faceID], DCEL)) == 2) {
 			// console.log("DEGENERATE CASE");
-			let edgeID = findTouchingFace(faceID, points[i], DCEL);
+			const edgeID = findTouchingEdgeID(faceID, points[i], DCEL);
 			updateStructuresDegen(i, points[i], faceID, edgeID, DCEL, TREE);
 		}
 		else updateStructures(i, points[i], faceID, DCEL, TREE);
@@ -56,14 +49,8 @@ function computeTriangulation(points) {
 		// console.log("UPDATED TREE", TREE);
 		// console.log("----------------------");
 	}
-
-	console.log("TRAINGULATION DONE!");
-	// console.log("DCEL", DCEL);
-	
 	getTriangles(outputTriangles, DCEL);
-
-	// console.log("TRIANGLES", outputTriangles);
-	console.log("END");
+	
 	return outputTriangles;
 }
 
@@ -140,24 +127,20 @@ function calculateEnclosingBox(points) {
 	return result;
 }
 
-
 /****************************************************/
 /***************** TRIANGULATION ********************/
 /****************************************************/
 
 function findFaceID(p, TREE) {
-
-	let currentLeafID = 0;
-	let currentLeaf = TREE[currentLeafID];
+	let currentLeaf = TREE[0];
 	let nSubs = currentLeaf.leafID.length;
 	while (nSubs != 0) {
 		let found = false;
 		for (let i = 0; i < nSubs && !found; i++) {
-			let nextLeaf = TREE[currentLeaf.leafID[i]];
+			const nextLeaf = TREE[currentLeaf.leafID[i]];
 			const containsCheck = pointInTriangle(p, nextLeaf.triangle);
 			if (containsCheck > 0) {
 				found = true;
-				currentLeafID = currentLeaf.leafID[i];
 				currentLeaf = nextLeaf;
 				nSubs = currentLeaf.leafID.length;
 			}
@@ -207,8 +190,8 @@ function updateStructures(pIndex, newPoint, f1ID, DCEL, TREE) {
 	DCEL.faces.push({"edgeID": e2ID, "leafID": numT+1});
 	DCEL.faces.push({"edgeID": e3ID, "leafID": numT+2});
 
-	let f2 = DCEL.faces[f2ID];
-	let f3 = DCEL.faces[f3ID];
+	const f2 = DCEL.faces[f2ID];
+	const f3 = DCEL.faces[f3ID];
 	
 	//Add edges
 	DCEL.edges.push({"vBID": v1ID, "fRID": f3ID, "eNID": e6IDT, "eTID": e4IDT});
@@ -243,27 +226,19 @@ function updateStructures(pIndex, newPoint, f1ID, DCEL, TREE) {
 	return;
 }
 
-function findTouchingFace(faceID, p, DCEL) {
+function findTouchingEdgeID(faceID, p, DCEL) {
 	const face = DCEL.faces[faceID];
 	let currentEdgeID = face.edgeID;
 	let currentEdge = DCEL.edges[currentEdgeID];
-	let reverseEdge = DCEL.edges[currentEdge.eTID];
-	let currentFaceID = reverseEdge.fRID;
-
-	let found = false;
-	for (let i = 0; i < 3 && !found; i++) {
-		if (pointInTriangle(p, getTriangleFromFace(DCEL.faces[currentFaceID], DCEL)) == 2) {
-			found = true;
+	
+	for (let i = 0; i < 3; i++) {
+		if (orientationTest(getSegmentFromEdge(currentEdge, DCEL), p) == 0) {
+			return currentEdgeID;
 		}
-		else {
-			currentEdgeID = currentEdge.eNID;
-			currentEdge = DCEL.edges[currentEdgeID];
-			reverseEdge = DCEL.edges[currentEdge.eTID];
-			currentFaceID = reverseEdge.fRID;
-		}
+		currentEdgeID = currentEdge.eNID;
+		currentEdge = DCEL.edges[currentEdgeID];
 	}
-
-	return currentEdgeID;
+	throw "Touching edge not found!"
 }
 
 function updateStructuresDegen(pIndex, newPoint, f1ID, e0ID, DCEL, TREE) {
@@ -364,6 +339,7 @@ function updateStructuresDegen(pIndex, newPoint, f1ID, e0ID, DCEL, TREE) {
 	TREE.push({"fID": f4ID, "triangle": getTriangleFromFace(f4, DCEL), "leafID": []});
 }
 
+
 /****************************************************/
 /**************** OBJECT CONVERSIONS ****************/
 /****************************************************/
@@ -405,40 +381,43 @@ function getPoint(x, y) {
 /****************************************************/
 
 /**
-* Returns if 2 points of the plane are equal.
-**/
+ * Returns if 2 points of the plane are equal.
+ */
 function equalPoints(p1, p2) {
   return p1.x == p2.x && p1.y == p2.y;
 }
 
 function pointInsideColinearSegment(s, p) {
   if (s.from.x == p.x) return aBetweenBD(p.y, s.from.y, s.to.y);
-  else return aBetweenBD(p.x, s.from.x, s.to.x);
+  return aBetweenBD(p.x, s.from.x, s.to.x);
 }
 
 /**
-* Returns if a is in the range b,d(could not be ordered)
-**/
+ * Returns if a is in the range b,d(could not be ordered)
+ */
 function aBetweenBD(a, b, d) {
   if (b < d) return b <= a && a <= d;
-  else return d <= a && a <= b;
+  return d <= a && a <= b;
 }
 
-/*
-* s Segment
-* r Point
-* return 3 options:
-*  1 -> r is to de LEFT of the segment s
-*  0 -> r is colinear to the segment s
-* -1 -> r is to de RIGHT of the segment s
-*/
+/**
+ * Orientation Test.
+ * 
+ *  1 -> r is to de LEFT of the segment s
+ *  0 -> r is colinear to the segment s
+ * -1 -> r is to de RIGHT of the segment s
+ *
+ * @param      {Segment}  	s       
+ * @param      {Point}  	r       
+ * @return     {int}  		OT
+ */
 function orientationTest(s, r) {
   const p = s.from;
   const q = s.to;
   const det = ((q.x-p.x)*(r.y-p.y)) - ((r.x-p.x)*(q.y-p.y));
   if (det > 0) return 1;
-  else if (det < 0) return -1;
-  else return det;
+  if (det < 0) return -1;
+  return 0;
 }
 
 
@@ -453,24 +432,20 @@ function orientationTest(s, r) {
  * 3 --> The point is part of 2 SEGMENT of the triangle(coincides with a vertex of the triangle)
  */
 function pointInTriangle(p, triangle) {
-	let result;
-	if (equalPoints(p, triangle[0]) || equalPoints(p, triangle[1]) || equalPoints(p, triangle[2])) result = 3;
-	else {
-		const s1 = getSegment(triangle[0], triangle[1]);
-		const s2 = getSegment(triangle[1], triangle[2]);
-		const s3 = getSegment(triangle[2], triangle[0]);
+	if (equalPoints(p, triangle[0]) || equalPoints(p, triangle[1]) || equalPoints(p, triangle[2])) return 3;
+	const s1 = getSegment(triangle[0], triangle[1]);
+	const s2 = getSegment(triangle[1], triangle[2]);
+	const s3 = getSegment(triangle[2], triangle[0]);
 
-		const ot1 = orientationTest(s1, p);
-		const ot2 = orientationTest(s2, p);
-		const ot3 = orientationTest(s3, p);
+	const ot1 = orientationTest(s1, p);
+	const ot2 = orientationTest(s2, p);
+	const ot3 = orientationTest(s3, p);
 
-		if (ot1 == ot2 && ot2 == ot3) result = 1;
-		else if (ot1 == 0 && pointInsideColinearSegment(s1, p)) result = 2;
-		else if (ot2 == 0 && pointInsideColinearSegment(s2, p)) result = 2;
-		else if (ot3 == 0 && pointInsideColinearSegment(s3, p)) result = 2;
-		else result = 0;
-	}
-	return result;
+	if (ot1 == ot2 && ot2 == ot3) return 1;
+	if (ot1 == 0 && pointInsideColinearSegment(s1, p)) return 2;
+	if (ot2 == 0 && pointInsideColinearSegment(s2, p)) return 2;
+	if (ot3 == 0 && pointInsideColinearSegment(s3, p)) return 2;
+	return 0;
 }
 
 /****************************************************/
