@@ -1,5 +1,7 @@
 "use strict";
 
+// NOT FINISHIED!!! Falten els casos degen
+
 /*
  * Basic structures:
  * 
@@ -24,44 +26,32 @@
  e.g., [[1,2,3],[2,3,4]] encodes two triangles, where the indices are relative to the array points
 **/
 function computeTriangulation(points) {
-	console.log("START");
-	const k = Math.floor(points.length/3);
 	const n = points.length;
+
 	let outputTriangles = [];
-
-	//TODO: create empty datastructures
 	let DCEL = {"vertexs": [], "faces": [], "edges": []}
-
-	//TODO: Calculate & Add encolsing triangle
-	//TODO: Add/choose fixed point
 	const fixedPoint = addEncolsingTriangle(points, n, outputTriangles, DCEL);
 	let fixedPointFaceID = 0; 
 	
-	// console.log("ENCLOSING TRIANGLE CALCULATED");
-	// console.log("DCEL", DCEL);
-	// console.log("FIXED POINT", fixedPoint);
-
-	console.log("TRAINGULATION STARTED!");
-	//TODO: Iterate over all sorted points:
 	for (let i = 0; i < n; i++) { //should not get last 3 added points
 		// console.log("----------------------");
 		// console.log("POINT " + i);
-		let faceID = findFaceID(points[i], fixedPoint, fixedPointFaceID, DCEL);
-		fixedPointFaceID = updateDCEL(i, points[i], faceID, fixedPoint, fixedPointFaceID, DCEL);
+		
+		const faceID = findFaceID(points[i], fixedPoint, fixedPointFaceID, DCEL);
+		if (pointInTriangle(points[i], getTriangleFromFace(DCEL.faces[faceID], DCEL)) == 2) {
+			// console.log("DEGENERATE CASE");
+			const edgeID = findTouchingEdgeID(faceID, points[i], DCEL);
+			fixedPointFaceID = updateStructuresDegen(i, points[i], faceID, edgeID, fixedPoint, fixedPointFaceID, DCEL);
+		}
+		else fixedPointFaceID = updateDCEL(i, points[i], faceID, fixedPoint, fixedPointFaceID, DCEL);
+		
 		// console.log("UPDATED DCEL", DCEL);
 		// console.log("NEW FIXED POINT FACE ID", fixedPointFaceID);
 		// console.log("----------------------");
 	}
 
-	console.log("TRAINGULATION DONE!");
-	// console.log("DCEL", DCEL);
-	
-	//TODO: Traverse the faces structure and add all faces as triangles
 	getTriangles(outputTriangles, DCEL);
 
-	// console.log("TRIANGLES", DCEL);
-
-	console.log("END");
 	return outputTriangles;
 }
 
@@ -145,27 +135,13 @@ function calculateEnclosingBox(points) {
 /****************************************************/
 
 function findFaceID(p, fp, fpFaceID, DCEL) {
-	const MAX_ITER = DCEL.faces.length;
-	let iter = 0;
-
 	let found = false;
 	let currentFaceID = fpFaceID;
 	let prevFaceID = -1;
 	let currentFace = DCEL.faces[currentFaceID];
-	while (!found && (iter < MAX_ITER)) {
+	while (!found) {
 		const containsCheck = pointInTriangle(p, getTriangleFromFace(currentFace, DCEL));
-		// console.log("\tcontainsCheck = " + containsCheck + " | in face " + currentFaceID);
-		if (containsCheck > 0) {
-			found = true;
-			if (containsCheck == 2) {
-				//TODO: Special case!!!
-				//
-			}
-			// else if (containsCheck == 3) {
-			// 	console.log("Something went wrong! Repeated Point!");
-			// 	throw "REPEATED POINT";
-			// }
-		}
+		if (containsCheck > 0) found = true;
 		else {
 			let edgeFound = false;
 			let currentEdge = DCEL.edges[currentFace.edgeID];
@@ -175,13 +151,11 @@ function findFaceID(p, fp, fpFaceID, DCEL) {
 				const et = DCEL.edges[currentEdge.eTID];
 				if (prevFaceID != et.fRID) {
 					const intersectionCheck = segmentsIntersecction(s1, s2);
-					// console.log("\tintersectionCheck = " + intersectionCheck + " | to face " + et.fRID);
 					if (intersectionCheck > 1) {
 						prevFaceID = currentFaceID;
 						currentFaceID = et.fRID;
 						currentFace = DCEL.faces[currentFaceID];
 						edgeFound = true;
-						// console.log(prevFaceID + " --> " + currentFaceID);
 					}
 				}
 				
@@ -191,17 +165,11 @@ function findFaceID(p, fp, fpFaceID, DCEL) {
 			if (!edgeFound) {
 				throw "NEW FACE NOT FOUND\nNew face not found for p = " + JSON.stringify(p);
 			}
-			iter++;
 		}
-	}
-
-	if (iter >= MAX_ITER) {
-		throw "MAX ITERATIONS\n for p = " + JSON.stringify(p);
 	}
 
 	return currentFaceID;
 }
-
 
 /**
  * Updates DCEL adding 1 vertex, 2 new faces and 6 new edges and updating necessary pointers.
@@ -285,6 +253,117 @@ function updateDCEL(pIndex, newPoint, f1ID, fp, fixedPointFaceID, DCEL) {
 	else if(pointInTriangle(fp, getTriangleFromFace(DCEL.faces[numF+1], DCEL)) > 0) {
 		// console.log("FPFID changed(2)");
 		return numF+1;
+	}
+	else return fixedPointFaceID;
+}
+
+function findTouchingEdgeID(faceID, p, DCEL) {
+	const face = DCEL.faces[faceID];
+	let currentEdgeID = face.edgeID;
+	let currentEdge = DCEL.edges[currentEdgeID];
+	
+	for (let i = 0; i < 3; i++) {
+		if (orientationTest(getSegmentFromEdge(currentEdge, DCEL), p) == 0) {
+			return currentEdgeID;
+		}
+		currentEdgeID = currentEdge.eNID;
+		currentEdge = DCEL.edges[currentEdgeID];
+	}
+	throw "Touching edge not found!"
+}
+
+function updateStructuresDegen(pIndex, newPoint, f1ID, e0ID, fp, fixedPointFaceID, DCEL) {
+	const numV = DCEL.vertexs.length;
+	const numE = DCEL.edges.length;
+	const numF = DCEL.faces.length;
+
+	let e0 = DCEL.edges[e0ID];
+	const e0IDT = e0.eTID;
+	let e0T = DCEL.edges[e0IDT];
+
+	const e1ID = e0.eNID;
+	let e1 = DCEL.edges[e1ID];
+	const e2ID = e1.eNID;
+	let e2 = DCEL.edges[e2ID];
+	const e3ID = e0T.eNID;
+	let e3 = DCEL.edges[e3ID];
+	const e4ID = e3.eNID;
+	let e4 = DCEL.edges[e4ID];
+
+	const e5ID = numE;
+	const e6ID = numE+1;
+	const e7ID = numE+2;
+	const e5IDT = numE+3;
+	const e6IDT = numE+4;
+	const e7IDT = numE+5;
+
+	const v1ID = e1.vBID;
+	const v2ID = e2.vBID;
+	const v3ID = e3.vBID;
+	const v4ID = e4.vBID;
+	let v1 = DCEL.vertexs[v1ID];
+	const v5ID = numV;
+
+	let f1 = DCEL.faces[f1ID];
+	const f2ID = e0T.fRID;
+	let f2 = DCEL.faces[f2ID];
+
+	//VERTEXS
+	DCEL.vertexs.push({"x": newPoint.x, "y": newPoint.y, "edgeID": e0IDT, "pointsIndex": pIndex});
+	v1.edgeID = e1ID;
+
+	//FACES
+	//old
+	f1.edgeID = e2ID;
+	f2.edgeID = e3ID;
+	//new
+	DCEL.faces.push({"edgeID": e5ID});
+	DCEL.faces.push({"edgeID": e7ID});
+	let f3 = DCEL.faces[numF];
+	let f4 = DCEL.faces[numF+1];
+	const f3ID = numF;
+	const f4ID = numF+1;
+
+	//EDGES e = {"vBID": int, "fRID": int, "eNID": int, "eTID": int}
+
+	e0.eNID = e5IDT;
+	e0T.vBID = v5ID;
+	e0T.eNID = e3ID;
+
+	e1.fRID = f3ID;
+	e1.eNID = e5ID;
+
+	//E2 no cal
+
+	e3.eNID = e6ID;
+
+	e4.fRID = f4ID;
+	e4.eNID = e7ID;
+
+	DCEL.edges.push({"vBID": v2ID, "fRID": f3ID, "eNID": e7IDT, "eTID": e5IDT}); //e5
+	DCEL.edges.push({"vBID": v4ID, "fRID": f2ID, "eNID": e0IDT, "eTID": e6IDT}); //e6
+	DCEL.edges.push({"vBID": v1ID, "fRID": f4ID, "eNID": e6IDT, "eTID": e7IDT}); //e7
+	
+	DCEL.edges.push({"vBID": v5ID, "fRID": f1ID, "eNID": e2ID, "eTID": e5ID}); //e5T
+	DCEL.edges.push({"vBID": v5ID, "fRID": f4ID, "eNID": e4ID, "eTID": e6ID}); //e6T
+	DCEL.edges.push({"vBID": v5ID, "fRID": f3ID, "eNID": e1ID, "eTID": e7ID}); //e7T
+	
+	//Modify Fixed Point
+	if(pointInTriangle(fp, getTriangleFromFace(f1, DCEL)) > 0) {
+		// console.log("FPFID changed(1)");
+		return f1ID;
+	}
+	else if(pointInTriangle(fp, getTriangleFromFace(f2, DCEL)) > 0) {
+		// console.log("FPFID changed(2)");
+		return f2ID;
+	}
+	else if(pointInTriangle(fp, getTriangleFromFace(f3, DCEL)) > 0) {
+		// console.log("FPFID changed(3)");
+		return f3ID;
+	}
+	else if(pointInTriangle(fp, getTriangleFromFace(f4, DCEL)) > 0) {
+		// console.log("FPFID changed(4)");
+		return f4ID;
 	}
 	else return fixedPointFaceID;
 }

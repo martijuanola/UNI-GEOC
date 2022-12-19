@@ -1,0 +1,1314 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"n",
+				"nums"
+			],
+			[
+				"read",
+				"readStacks"
+			],
+			[
+				"p",
+				"print"
+			],
+			[
+				"cu",
+				"currentEdgeID"
+			],
+			[
+				"get",
+				"getSegment"
+			],
+			[
+				"onc",
+				"onclick"
+			],
+			[
+				"e",
+				"e5ID"
+			],
+			[
+				"num",
+				"numF"
+			],
+			[
+				"f",
+				"fRID"
+			],
+			[
+				"fix",
+				"fixedPoint"
+			],
+			[
+				"e5i",
+				"e5ID"
+			],
+			[
+				"cons",
+				"console"
+			],
+			[
+				"n_t",
+				"n_types"
+			],
+			[
+				"n_",
+				"n_tokens"
+			],
+			[
+				"sol",
+				"solveSystem"
+			],
+			[
+				"par",
+				"paramName"
+			],
+			[
+				"para",
+				"parameters"
+			],
+			[
+				"param",
+				"paramName"
+			],
+			[
+				"func",
+				"funcName"
+			],
+			[
+				"new",
+				"newElem"
+			],
+			[
+				"prin",
+				"printStack"
+			],
+			[
+				"fun",
+				"functions"
+			],
+			[
+				"__",
+				"__init__"
+			],
+			[
+				"not",
+				"note2BaseValue"
+			],
+			[
+				"di",
+				"divideNconquer"
+			],
+			[
+				"ev",
+				"eval2Aux"
+			],
+			[
+				"R",
+				"roman2int’"
+			],
+			[
+				"r",
+				"romanMap"
+			],
+			[
+				"ro",
+				"romanMap"
+			],
+			[
+				"ge",
+				"getText"
+			],
+			[
+				"li",
+				"lilyFileName"
+			],
+			[
+				"lil",
+				"lilyFileName"
+			],
+			[
+				"s",
+				"symbolsTable"
+			],
+			[
+				"fl",
+				"flatten_rec"
+			],
+			[
+				"in",
+				"insertionSort"
+			],
+			[
+				"l",
+				"lookNsayVal"
+			],
+			[
+				"rig",
+				"right1"
+			],
+			[
+				"tart",
+				"tartRow"
+			],
+			[
+				"re",
+				"iterate"
+			],
+			[
+				"my",
+				"myZipWith"
+			],
+			[
+				"mod",
+				"modelStack"
+			],
+			[
+				"m",
+				"myMaximum"
+			],
+			[
+				"pre",
+				"preferenciesNoComplertes"
+			],
+			[
+				"Vistai",
+				"VistaInformacioItem"
+			],
+			[
+				"S",
+				"StringOperations"
+			],
+			[
+				"pa",
+				"parseFloat"
+			],
+			[
+				"user",
+				"user_ID"
+			],
+			[
+				"us",
+				"user_ID_pos"
+			],
+			[
+				"Rec",
+				"RecommendationNotFoundException"
+			],
+			[
+				"Controlador",
+				"ControladorDominiAlgorisme"
+			],
+			[
+				"Coll",
+				"CollaborativeFiltering"
+			],
+			[
+				"Conten",
+				"ContentBasedFiltering"
+			],
+			[
+				"Cont",
+				"ContentBasedFiltering"
+			],
+			[
+				"Item",
+				"ItemIdNotValidException"
+			],
+			[
+				"I",
+				"ItemStaticValuesAlreadyInitializedException"
+			],
+			[
+				"th",
+				"throws"
+			],
+			[
+				"Strin",
+				"StringBuffer"
+			],
+			[
+				"po",
+				"getPosId"
+			],
+			[
+				"Us",
+				"UserNotFoundException"
+			],
+			[
+				"set",
+				"setAlgorisme"
+			],
+			[
+				"getA",
+				"getAllRecomanacions"
+			],
+			[
+				"it",
+				"ItemStaticValuesAlreadyInitializedException"
+			],
+			[
+				"itemS",
+				"ItemStaticValuesNotInitializedException"
+			],
+			[
+				"Con",
+				"ControladorDominiAlgorisme"
+			],
+			[
+				"CO",
+				"ControladorLoad"
+			],
+			[
+				"Conto",
+				"ControladorLoad"
+			],
+			[
+				"tipusA",
+				"tipusAtribut"
+			],
+			[
+				"tipus",
+				"tipusAtribut"
+			],
+			[
+				"St",
+				"StringOperations"
+			],
+			[
+				"tipu",
+				"tipusAtriubtsS"
+			],
+			[
+				"SET_",
+				"set_k"
+			],
+			[
+				"carregarE",
+				"carregarEstat"
+			],
+			[
+				"Conj",
+				"ConjuntUsuaris"
+			],
+			[
+				"CON",
+				"ControladorPersistencia"
+			],
+			[
+				"string",
+				"StringOperations"
+			],
+			[
+				"fold",
+				"FolderNotValidException"
+			],
+			[
+				"Folder",
+				"FolderNotValidException"
+			],
+			[
+				"a",
+				"AlreadyLogedInException"
+			],
+			[
+				"usuar",
+				"usuaris_cluster"
+			],
+			[
+				"recom",
+				"recomanacioValorada"
+			],
+			[
+				"carr",
+				"carregarEstat"
+			],
+			[
+				"nomA",
+				"setNomAtributs"
+			],
+			[
+				"ini",
+				"inicialitzarStatics"
+			],
+			[
+				"nom",
+				"nomAtribut"
+			],
+			[
+				"print",
+				"printD"
+			],
+			[
+				"oper",
+				"OPERADORS"
+			],
+			[
+				"resu",
+				"resultG"
+			],
+			[
+				"min",
+				"minNND"
+			],
+			[
+				"ne",
+				"neighborsUS"
+			],
+			[
+				"un",
+				"unsigned"
+			],
+			[
+				"UN",
+				"unordered_set"
+			],
+			[
+				"most",
+				"mostra_9"
+			],
+			[
+				"getVa",
+				"getValoracions"
+			],
+			[
+				"U",
+				"Utils"
+			],
+			[
+				"getAt",
+				"getAtributs"
+			],
+			[
+				"assi",
+				"assignarNomAtributs"
+			],
+			[
+				"compar",
+				"compareTo"
+			],
+			[
+				"Recom",
+				"Recomanacio"
+			],
+			[
+				"getR",
+				"getRecomanacions"
+			],
+			[
+				"GET",
+				"getId"
+			],
+			[
+				"Conjunt",
+				"ConjuntRecomanacions"
+			],
+			[
+				"item",
+				"items_sorted"
+			],
+			[
+				"Conju",
+				"ConjuntUsuaris"
+			],
+			[
+				"Conjun",
+				"ConjuntRecomanacions"
+			],
+			[
+				"FileN",
+				"FileNotValidException"
+			],
+			[
+				"com",
+				"compareTo"
+			],
+			[
+				"recoma",
+				"recomanacioValorada"
+			],
+			[
+				"clas",
+				"class_initalised"
+			],
+			[
+				"c",
+				"class_initalised"
+			],
+			[
+				"cl",
+				"class_initalised"
+			],
+			[
+				"Contr",
+				"ControladorDominiAlgorisme"
+			],
+			[
+				"add",
+				"afegirDades"
+			],
+			[
+				"Folde",
+				"FolderNotValidException"
+			],
+			[
+				"t",
+				"throws"
+			],
+			[
+				"arr",
+				"arrayT3"
+			],
+			[
+				"arra",
+				"arrayT2"
+			],
+			[
+				"get_",
+				"get_peticio"
+			],
+			[
+				"gasolin",
+				"gasolineres"
+			],
+			[
+				"is",
+				"isNull"
+			],
+			[
+				"benefic",
+				"benefici_camio_old"
+			],
+			[
+				"Gasol",
+				"GasolinaBoard"
+			],
+			[
+				"Ga",
+				"GasolinaBoard"
+			],
+			[
+				"Gas",
+				"GasolinaBoard"
+			],
+			[
+				"dist",
+				"distCG"
+			],
+			[
+				"D",
+				"Distribucion"
+			],
+			[
+				"max",
+				"maxViatges"
+			],
+			[
+				"dis",
+				"distCG"
+			],
+			[
+				"Dis",
+				"Distribucion"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					""
+				],
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					"Run"
+				]
+			],
+			[
+				"Packages/C++/C++ Single File.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/Java/Ant.sublime-build",
+					""
+				],
+				[
+					"Packages/Java/JavaC.sublime-build",
+					""
+				],
+				[
+					"Packages/Makefile/Make.sublime-build",
+					""
+				],
+				[
+					"Packages/Makefile/Make.sublime-build",
+					"Clean"
+				]
+			],
+			[
+				"Packages/Makefile/Make.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					""
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Traditional"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"PdfLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"XeLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"LuaLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Basic Builder"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Basic Builder - PdfLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Basic Builder - XeLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Basic Builder - LuaLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Script Builder"
+				]
+			],
+			[
+				"Packages/LaTeXTools/LaTeX.sublime-build",
+				"Basic Builder"
+			]
+		],
+		[
+			[
+				[
+					"Packages/Makefile/Make.sublime-build",
+					""
+				],
+				[
+					"Packages/Makefile/Make.sublime-build",
+					"Clean"
+				]
+			],
+			[
+				"Packages/Makefile/Make.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"ter",
+				"Terminus: Open Default Shell in Tab (View)"
+			],
+			[
+				"push",
+				"Git: Push"
+			],
+			[
+				"commit",
+				"Git: Commit"
+			],
+			[
+				"add",
+				"Git: Add All"
+			],
+			[
+				"commi",
+				"Git: Commit"
+			],
+			[
+				"comm",
+				"Git: Commit"
+			],
+			[
+				"comi",
+				"Git: Commit"
+			],
+			[
+				"ad",
+				"Git: Add All"
+			],
+			[
+				"add ",
+				"Git: Add All"
+			],
+			[
+				"pull",
+				"Git: Pull Using Rebase"
+			],
+			[
+				"pus",
+				"Git: Push"
+			],
+			[
+				"term",
+				"Terminus: Open Default Shell in Tab (View)"
+			],
+			[
+				"git pull",
+				"Git: Pull"
+			],
+			[
+				"git push",
+				"Git: Push"
+			],
+			[
+				"git ",
+				"Git: Pull"
+			],
+			[
+				"termi",
+				"Terminus: Open Default Shell in Tab (View)"
+			],
+			[
+				"pul",
+				"Git: Pull"
+			],
+			[
+				"PUS",
+				"Git: Push"
+			],
+			[
+				"a",
+				"AutoPEP8: Format Code"
+			],
+			[
+				"aut",
+				"AutoPEP8: Format Code"
+			],
+			[
+				"au",
+				"AutoPEP8: Format Code"
+			],
+			[
+				"auto",
+				"AutoPEP8: Format Code"
+			],
+			[
+				"list",
+				"Package Control: List Packages"
+			],
+			[
+				"pac",
+				"Package Control: List Packages"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"TERM",
+				"Terminus: Open Default Shell in Tab (View)"
+			],
+			[
+				"pack ins",
+				"Package Control: Install Package"
+			],
+			[
+				"termin",
+				"Terminus: Open Default Shell in Tab (View)"
+			],
+			[
+				"terminus",
+				"Terminus: Open Default Shell in Tab (View)"
+			],
+			[
+				"git add ",
+				"Git: Add All"
+			],
+			[
+				"ADD",
+				"Git: Add All"
+			],
+			[
+				"TERMINU",
+				"Terminus: Open Default Shell in Tab (View)"
+			],
+			[
+				"puhs",
+				"Git: Push"
+			],
+			[
+				"ommit",
+				"Git: Commit"
+			],
+			[
+				"com",
+				"Git: Commit"
+			],
+			[
+				"COMM",
+				"Git: Commit"
+			],
+			[
+				"terminu",
+				"Terminus: Open Default Shell in Tab (View)"
+			],
+			[
+				"check",
+				"Git: Checkout Tag"
+			],
+			[
+				"teri",
+				"Terminus: Open Default Shell in Panel"
+			],
+			[
+				"COMMIT",
+				"Git: Commit"
+			],
+			[
+				"PULL",
+				"Git: Pull"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"pu",
+				"Git: Push"
+			],
+			[
+				"git add .",
+				"Git: Add..."
+			],
+			[
+				"+",
+				"Set Syntax: C++"
+			],
+			[
+				"git status",
+				"Git: Status"
+			],
+			[
+				"merge",
+				"Git: Merge Branch"
+			],
+			[
+				"git commi",
+				"Git: Commit"
+			],
+			[
+				"Package Control: remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"docblo",
+				"DocBlockr: Decorate line comment"
+			],
+			[
+				"doc",
+				"Git: Document Selection"
+			],
+			[
+				"in",
+				"Package Control: Install Package"
+			],
+			[
+				"cmmit",
+				"Git: Commit"
+			],
+			[
+				"commit ",
+				"Git: Commit"
+			],
+			[
+				"git add",
+				"Git: Add All"
+			],
+			[
+				"git commit",
+				"Git: Commit"
+			],
+			[
+				"ull",
+				"Git: Pull"
+			],
+			[
+				"git chec",
+				"Git: Checkout Tag"
+			],
+			[
+				"terminus open",
+				"Terminus: Open Default Shell in Tab (View)"
+			],
+			[
+				"terminus clo",
+				"Terminus: Close All"
+			],
+			[
+				"temrinus",
+				"Terminus: Open Default Shell in Panel"
+			],
+			[
+				"git comm",
+				"Git: Commit"
+			],
+			[
+				"git pul",
+				"Git: Pull"
+			],
+			[
+				"git pus",
+				"Git: Push"
+			],
+			[
+				"git com",
+				"Git: Commit"
+			],
+			[
+				"git",
+				"Git: Pull"
+			],
+			[
+				"sublime ",
+				"Set Syntax: Sublimerge"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"isntall",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"setsyntax latex",
+				"Set Syntax: LaTeX"
+			],
+			[
+				"set syntax la",
+				"Set Syntax: LaTeX"
+			],
+			[
+				"set syntax to latex",
+				"Set Syntax: LaTeX Log"
+			],
+			[
+				"termins",
+				"Terminus: Open Default Shell in Tab (View)"
+			],
+			[
+				"termiu",
+				"Terminus: Open Default Shell in Tab (View)"
+			],
+			[
+				"",
+				"About"
+			],
+			[
+				"paka",
+				"Package Control: Discover Packages"
+			],
+			[
+				"open",
+				"Terminus: Open Default Shell in Tab (View)"
+			],
+			[
+				"termius",
+				"Terminus: Open Default Shell in Tab (View)"
+			],
+			[
+				"Terminus",
+				"Terminus: Open Default Shell in Tab (View)"
+			],
+			[
+				"Termi",
+				"Terminus: Close"
+			],
+			[
+				"Install Package",
+				"Package Control: Install Package"
+			],
+			[
+				"Package",
+				"Install Package Control"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 232.0,
+		"history":
+		[
+			"Terminus: Open Default Shell in Tab",
+			"\"cmd\": [\"/Applications/MyProgram.app/Contents/MacOS/my_command\", \"-d\", \"$file\"]",
+			"\"cmd\" : [\"cd\"]",
+			"{\"cmd\" : [\"cd\"]}",
+			"\"cmd\":[\"cd\"]",
+			"cd",
+			"\"cmd\": \"~/Documents/runC.sh\", \"${file_path}/${file_name}\", \"${file_path}/${file_base_name}\"]",
+			"g++ P84415.cc",
+			"ls",
+			"cd Desktop"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/4lab",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/5lab"
+	],
+	"file_history":
+	[
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/5lab/geoc_lab5.html",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/5lab/geoc_lab5_3dview.html",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/5lab/Lanzarote-small.json.js",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/5lab/geoc_lab4-5.html",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/5lab/Lanzarote.json.js",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/5lab/Lanzarote-degen.json.js",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/5lab/triangulation.js",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/4lab/triangulationFP.js",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/GEOC",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/6p/dummy6.txt",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/6p/p6_2.py",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/6p/p6_1.py",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/5p/dummy5.txt",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/5p/p5_2.py",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/5p/p5_1.py",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/4p/p4_1.py",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/4p/dummy4.txt",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/4p/p4_2.py",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/4p/input4.txt",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/3p/dummy3.txt",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/3p/p3_2.py",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/3p/p3_1.py",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/2p/dummy2.txt",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/2p/input2.txt",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/2p/p2_1.py",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/2p/p2_2.py",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/1p/p1_2.py",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/1p/p1_1.py",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/p1/p1_2.py",
+		"/Users/martijuanola/git_repositories/github/AdventOfCode/2022/p1/p1_1.py",
+		"/Users/martijuanola/Desktop/TFGTitle",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/4lab/triangulation.js",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/4lab/Lanzarote.json.js",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/4lab/Lanzarote-degen.json.js",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/4lab/toy_example.json.js",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/4lab/toy_example_degen.json.js",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/4lab/README.md",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/1lab/geoc_lab1.html",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/2lab/geoc_lab2.html",
+		"/Users/martijuanola/git_repositories/github/UNI-GEOC/4lab/zoompan.js",
+		"/Users/martijuanola/Documents/Education/Uni/4.1/GEOC/GEOC",
+		"/Users/martijuanola/git_repositories/github/UNI-CAIM/3lab/Rocchio.py",
+		"/Users/martijuanola/git_repositories/github/UNI-CAIM/3lab/test.py",
+		"/Users/martijuanola/git_repositories/github/UNI-CAIM/2lab/Practica_2_Marti_Juanola_Joan_Alles.zip",
+		"/Users/martijuanola/git_repositories/github/UNI-CAIM/2lab/plot_zipfs.py",
+		"/Users/martijuanola/git_repositories/github/UNI-CAIM/2lab/generateImages.sh",
+		"/Users/martijuanola/git_repositories/github/UNI-CAIM/2lab/TFIDFViewer.py",
+		"/Users/martijuanola/git_repositories/github/UNI-CAIM/2lab/images/filterAllWierdChars.png",
+		"/Users/martijuanola/git_repositories/github/UNI-CAIM/2lab/IndexFilesPreprocess.py",
+		"/Users/martijuanola/git_repositories/github/UNI-CAIM/1lab/plot1.py",
+		"/Users/martijuanola/git_repositories/github/UNI-CAIM/.gitignore",
+		"/Applications/XAMPP/xamppfiles/htdocs/index.php",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/entrega/jsbach.py",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/README.md",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/entrega/test-tempo.jsb",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/entrega/makefile",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/makefile",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/entrega/TreeVisitor.py",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/TreeVisitor.py",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/jsbach.g4",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/jsbach.py",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/exceptions.py",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/input.jsb",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/Expr.g",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/test/allNotes.jsb",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/exemple.lily",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/test/helloWorld.jsb",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/test/mcd.jsb",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/test/hanoi.jsb",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/test/notesHanoi.jsb",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/input.in",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/test.lily",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/input5/test.lily",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/notes.txt",
+		"/Users/martijuanola/Nextcloud/LP/haskell/prova.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/PastExams/3-P24239.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/PastExams/2-P91910.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/PastExams/1-P48366.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/P2019-05-06/3-P58738.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/P2019-05-06/1-P32532.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/P2019-05-06/Login Shell",
+		"/Users/martijuanola/Nextcloud/LP/haskell/P2019-11-04/3-P88451.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/P2019-11-04/2-P36813.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/P2019-11-04/1-P62645.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/LAB6/2-P87082.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/LAB6/1-P87974.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/LAB5/2-P50086.hs",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/arbreVisitor.py",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/ExprVisitor.py",
+		"/Users/martijuanola/Nextcloud/LP/haskell/LAB4/3-P80618.hs",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/hanoi.sh",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/tests/mcd.jsb",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/tests/hanoi.jsb",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/tests/notes_hanoi.jsb",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/tests/helloworld.jsb",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/interpret.py",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/Expr.interp",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/bin/lilypond",
+		"/Users/martijuanola/Nextcloud/LP/practica-jsbach/.profile",
+		"/Users/martijuanola/Nextcloud/LP/python/LAB2/P66679.py",
+		"/Users/martijuanola/Nextcloud/LP/haskell/LAB1/2-P25054.hs",
+		"/Users/martijuanola/Nextcloud/LP/python/LAB2/P80049.py",
+		"/Users/martijuanola/Nextcloud/LP/haskell/LAB5/P80049.py",
+		"/Users/martijuanola/Nextcloud/LP/haskell/LAB5/1-P70540.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/LAB4/P70540.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/LAB4/2-P37072.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/LAB4/1-P97301.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/LAB2/4-P71775.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/LAB4/p1.hs",
+		"/Users/martijuanola/Nextcloud/LP/haskell/LAB3/p2.hs",
+		"/Users/martijuanola/Nextcloud/LP/python/LAB1/P71608.py",
+		"/Users/martijuanola/Nextcloud/LP/python/LAB1/P51956.py",
+		"/Users/martijuanola/Nextcloud/LP/python/LAB1/P84591.py",
+		"/Users/martijuanola/Nextcloud/LP/LAB4/p2.hs",
+		"/Users/martijuanola/Nextcloud/LP/LAB3/p2.hs",
+		"/Users/martijuanola/Nextcloud/LI/P1/SAT-alumnes0.cpp",
+		"/Users/martijuanola/Nextcloud/LI/P1/SAT-alumnes1.cpp",
+		"/Users/martijuanola/Nextcloud/LP/LAB1/p3.hs",
+		"/Users/martijuanola/Nextcloud/LP/LAB1/p2.hs",
+		"/Users/martijuanola/Nextcloud/LP/LAB1/p1.hs",
+		"/Users/martijuanola/Documents/Coding/ordenar array de nombres.cc",
+		"/Users/martijuanola/git_repositories/gitlab/IA-Practica-3-Habitacions/4domains.pddl",
+		"/Users/martijuanola/git_repositories/gitlab/IA-Practica-3-Habitacions/3domains.pddl",
+		"/Users/martijuanola/git_repositories/gitlab/IA-Practica-3-Habitacions/2domains.pddl",
+		"/Users/martijuanola/git_repositories/gitlab/IA-Practica-3-Habitacions/1domains.pddl",
+		"/Users/martijuanola/git_repositories/gitlab/IA-Practica-3-Habitacions/1problems.pddl",
+		"/Users/martijuanola/git_repositories/gitlab/IA-Practica-3-Habitacions/0domains.pddl",
+		"/Users/martijuanola/git_repositories/gitlab/IA-Practica-3-Habitacions/0problems.pddl"
+	],
+	"find":
+	{
+		"height": 33.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"scrollbar_highlights": true,
+		"show_context": true,
+		"use_buffer2": true,
+		"use_gitignore": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 33.0
+	},
+	"input":
+	{
+		"height": 45.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.Terminus":
+	{
+		"height": 188.0
+	},
+	"output.autopep8":
+	{
+		"height": 269.0
+	},
+	"output.exec":
+	{
+		"height": 241.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.git":
+	{
+		"height": 601.0
+	},
+	"output.latextools":
+	{
+		"height": 157.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 445.0
+	},
+	"pinned_build_system": "",
+	"project": "GEOC.sublime-project",
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"ush",
+				"doc/javadoc/src/recomanador/domini/Usuari.html"
+			],
+			[
+				"make",
+				"Makefile"
+			],
+			[
+				"cami",
+				"src/Gasolinero/Camion.java"
+			],
+			[
+				"board",
+				"src/Gasolinero/GasolinaBoard.java"
+			],
+			[
+				"gas",
+				"doc/javadoc/IA/Gasolina/Gasolinera.html"
+			],
+			[
+				"",
+				"Login Shell"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/Documents/Uni/3.1/IA - Intel·ligència Artificial/Pràctica 1/IApractica1.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 233.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

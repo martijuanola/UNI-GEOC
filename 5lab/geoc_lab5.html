@@ -1,14 +1,13 @@
 <html>
 	<head>
-		<title>GEOC - Lab 4-5</title>
+		<title>GEOC - Lab 5</title>
 	</head>
-	<h1>GEOC - Lab 4-5</h1>
+	<h1>GEOC - Lab 5</h1>
 	<canvas id="canvas" width="1024" height="768"></canvas>
 
 	<!---- INPUTS ---->
-	<script type="text/javascript" src="toy_example.json.js"></script>
-	<script type="text/javascript" src="toy_example_degen.json.js"></script>
 	<script type="text/javascript" src="Lanzarote.json.js"></script>
+	<script type="text/javascript" src="Lanzarote-small.json.js"></script>
 	<script type="text/javascript" src="Lanzarote-degen.json.js"></script>
 
 	<!---- External library to handle zoom and pan ---->
@@ -204,24 +203,20 @@ function changeDataSet() {
 function applyDataSet() {
 	switch (dataset) {
 		case "1":
-			inputJSON = inputJSON_toy;
-			console.log("Change to Toy");
+			inputJSON = inputJSON_lanzarote_small;
+			console.log("Change to Lanzarote (small)");
 			break;
 		case "2":
-			inputJSON = inputJSON_toy_degen;
-			console.log("Change to Toy degen");
-			break;
-		case "3":
 			inputJSON = inputJSON_lanzarote;
 			console.log("Change to Lanzarote");
 			break;
-		case "4":
+		case "3":
 			inputJSON = inputJSON_lanzarote_degen;
-			console.log("Change to Lanzarote degen");
+			console.log("Change to Lanzarote (degen)");
 			break;
 		default:
-			inputJSON = inputJSON_toy;
-			console.log("Change to Toy");
+			inputJSON = inputJSON_lanzarote_small;
+			console.log("Change to Lanzarote (small");
 	}
 	points = JSON.parse(JSON.stringify(inputJSON.points)); // Requires inputJSON variable set in file
 	pointsPointer = inputJSON.points; // Requires inputJSON variable set in file
@@ -249,10 +244,9 @@ function applyDataSet() {
 
 
 	  <select id="dataset" onchange="changeDataSet()">
-	    <option value = 1>Toy example</option>
-	    <option value = 2>Toy example (degen)</option>
-	    <option value = 3>Lanzarote</option>
-	    <option value = 4>Lanzarote (degen)</option>
+	    <option value = 1>Lanzarote (small)</option>
+	    <option value = 2>Lanzarote</option>
+	    <option value = 3>Lanzarote (degen)</option>
 	  </select>
 
 	<br><br>
