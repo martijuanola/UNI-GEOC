@@ -39,7 +39,7 @@ function computeTriangulation(points) {
 		if (pointInTriangle(points[i], getTriangleFromFace(DCEL.faces[faceID], DCEL)) == 2) {
 			// console.log("DEGENERATE CASE");
 			const edgeID = findTouchingEdgeID(faceID, points[i], DCEL);
-			fixedPointFaceID = updateStructuresDegen(i, points[i], faceID, edgeID, fixedPoint, fixedPointFaceID, DCEL);
+			fixedPointFaceID = updateDCELDegen(i, points[i], faceID, edgeID, fixedPoint, fixedPointFaceID, DCEL);
 		}
 		else fixedPointFaceID = updateDCEL(i, points[i], faceID, fixedPoint, fixedPointFaceID, DCEL);
 		
@@ -270,7 +270,7 @@ function findTouchingEdgeID(faceID, p, DCEL) {
 	throw "Touching edge not found!"
 }
 
-function updateStructuresDegen(pIndex, newPoint, f1ID, e0ID, fp, fixedPointFaceID, DCEL) {
+function updateDCELDegen(pIndex, newPoint, f1ID, e0ID, fp, fixedPointFaceID, DCEL) {
 	const numV = DCEL.vertexs.length;
 	const numE = DCEL.edges.length;
 	const numF = DCEL.faces.length;
