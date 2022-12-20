@@ -55,80 +55,6 @@ function computeTriangulation(points) {
 
 
 /****************************************************/
-/**************** ENCLOSING TRIANGLE ****************/
-/****************************************************/
-
-const noise = 1;
-
-/**
- * Modifies main structures adding an enclosing triangle for the input points.
- *
- *    B
- *	 / \
- *	A _ C
- *	
- * @param      {Array}   points           The points
- * @param      {number}  n                Length of points
- * @param      {<type>}  outputTriangles  The output triangles
- * @param      {Array}   vertexs          The vertexs
- * @param      {Array}   faces            The faces
- * @param      {Array}   edges            The edges
- * @return     {Object}  Fixed point
- */
-function addEncolsingTriangle(points, n, outputTriangles, DCEL) {
-	
-	const eBox = calculateEnclosingBox(points);
-
-	const dx = eBox.maxx - eBox.minx;
-	const dy = eBox.maxy - eBox.miny;
-	const midx = eBox.minx + dx/2;
-	const midy = eBox.miny + dy/2;
-	const side = 2*(dx+dy)/Math.sqrt(3);
-
-	points.push({"x": Math.floor(midx-side/2)-noise,"y": eBox.miny-noise}); //A
-	points.push({"x": midx,"y": Math.ceil(eBox.miny +dy+ (Math.sqrt(3)*dx/2))+noise});  //B
-	points.push({"x": Math.ceil(midx+side/2)+noise,"y": eBox.miny-noise});  //C
-
-	//MODIFY INTERNAL DATA STRUCTURES
-	DCEL.vertexs.push({"x": points[n].x, "y": points[n].y, "edgeID": 0, "pointsIndex": n});
-	DCEL.vertexs.push({"x": points[n+1].x, "y": points[n+1].y, "edgeID": 2, "pointsIndex": n+1});
-	DCEL.vertexs.push({"x": points[n+2].x, "y": points[n+2].y, "edgeID": 4, "pointsIndex": n+2});
-
-	DCEL.faces.push({"edgeID": 0});
-
-	DCEL.edges.push({"vBID": 0, "fRID": 0, "eNID": 2, "eTID": 1});
-	DCEL.edges.push({"vBID": 1, "fRID": -1, "eNID": 5, "eTID": 0});
-
-	DCEL.edges.push({"vBID": 1, "fRID": 0, "eNID": 4, "eTID": 3});
-	DCEL.edges.push({"vBID": 2, "fRID": -1, "eNID": 3, "eTID": 2});
-
-	DCEL.edges.push({"vBID": 2, "fRID": 0, "eNID": 0, "eTID": 5});
-	DCEL.edges.push({"vBID": 0, "fRID": -1, "eNID": 1, "eTID": 4});
-
-	//Return middle point to use as the fixed point
-	//TODO: remove noise
-	return getPoint(midx+noise, midy+noise);
-}
-
-/**
- * Calculates the enclosing box.
- *
- * @param      {"x","y"}  points  Set of points
- * @return     {"minx","miny","maxx","maxy"}  Min and max components for x and y (the enclosing box).
- */
-function calculateEnclosingBox(points) {
-	let result = {"minx" : points[0].x, "miny" : points[0].y, "maxx" : points[0].x, "maxy" : points[0].y};
-	for (let i = 1; i < points.length; i++) {
-		if(points[i].x < result.minx) result.minx = points[i].x;
-		else if(points[i].x > result.maxx) result.maxx = points[i].x;
-		if(points[i].y < result.miny) result.miny = points[i].y;
-		else if(points[i].y > result.maxy) result.maxy = points[i].y;
-	}
-	return result;
-}
-
-
-/****************************************************/
 /***************** TRIANGULATION ********************/
 /****************************************************/
 
@@ -367,6 +293,15 @@ function updateDCELDegen(pIndex, newPoint, f1ID, e0ID, fp, fixedPointFaceID, DCE
 }
 
 /****************************************************/
+/******************* DELAUNY FLIPS ******************/
+/****************************************************/
+
+function checkIfDelaunay(vertex, DCEL) {}
+
+function delaunayFlip() {}
+
+
+/****************************************************/
 /**************** OBJECT CONVERSIONS ****************/
 /****************************************************/
 
@@ -569,6 +504,7 @@ function segmentsIntersecction(s1, s2) {
 /********** LAB2 -- POINT IN TRIANGLE ***************/
 /****************************************************/
 
+
 /**
  * 0 --> The point is OUTSIDE the triangle
  * 1 --> The point is INSIDE the triangle
@@ -595,6 +531,122 @@ function pointInTriangle(p, triangle) {
 	}
 	return result;
 }
+
+/****************************************************/
+/*********** LAB3 -- POINT IN CIRCLE ****************/
+/****************************************************/
+
+
+function sortCircleCounterclockwise(cp) {
+  const ot = orientationTest({"from": cp[0], "to":cp[1]}, cp[2]);
+  if(ot < 0) [cp[1], cp[2]] = [cp[2], cp[1]];
+}
+
+/**
+ * Returns the point position relative to a circle.
+ * 
+ * @param      {point} 
+ * @param      {point[]} 3 points defining the circle
+ * @return 0 - OUTSIDE || 1 - INSIDE || 2 - EDGE
+ */
+function classifyPoint(p, cp) {
+  sortCircleCounterclockwise(cp);
+
+  let c11 = cp[1].x-cp[0].x;
+  let c12 = cp[1].y-cp[0].y;
+  let c13 = c11*c11 + c12*c12;
+
+  let c21 = cp[2].x-cp[0].x;
+  let c22 = cp[2].y-cp[0].y;
+  let c23 = c21*c21 + c22*c22;
+
+  let c31 = p.x-cp[0].x;
+  let c32 = p.y-cp[0].y;
+  let c33 = c31*c31 + c32*c32;
+
+  let m = [[c11, c12, c13],
+       [c21, c22, c23],
+       [c31, c32, c33]];
+
+  const det = math.det(m);
+  if (det > 0) return 0;
+  else if (det < 0) return 1;
+  else return 2;
+}
+
+/****************************************************/
+/**************** ENCLOSING TRIANGLE ****************/
+/****************************************************/
+
+const noise = 1;
+
+/**
+ * Modifies main structures adding an enclosing triangle for the input points.
+ *
+ *    B
+ *	 / \
+ *	A _ C
+ *	
+ * @param      {Array}   points           The points
+ * @param      {number}  n                Length of points
+ * @param      {<type>}  outputTriangles  The output triangles
+ * @param      {Array}   vertexs          The vertexs
+ * @param      {Array}   faces            The faces
+ * @param      {Array}   edges            The edges
+ * @return     {Object}  Fixed point
+ */
+function addEncolsingTriangle(points, n, outputTriangles, DCEL) {
+	
+	const eBox = calculateEnclosingBox(points);
+
+	const dx = eBox.maxx - eBox.minx;
+	const dy = eBox.maxy - eBox.miny;
+	const midx = eBox.minx + dx/2;
+	const midy = eBox.miny + dy/2;
+	const side = 2*(dx+dy)/Math.sqrt(3);
+
+	points.push({"x": Math.floor(midx-side/2)-noise,"y": eBox.miny-noise}); //A
+	points.push({"x": midx,"y": Math.ceil(eBox.miny +dy+ (Math.sqrt(3)*dx/2))+noise});  //B
+	points.push({"x": Math.ceil(midx+side/2)+noise,"y": eBox.miny-noise});  //C
+
+	//MODIFY INTERNAL DATA STRUCTURES
+	DCEL.vertexs.push({"x": points[n].x, "y": points[n].y, "edgeID": 0, "pointsIndex": n});
+	DCEL.vertexs.push({"x": points[n+1].x, "y": points[n+1].y, "edgeID": 2, "pointsIndex": n+1});
+	DCEL.vertexs.push({"x": points[n+2].x, "y": points[n+2].y, "edgeID": 4, "pointsIndex": n+2});
+
+	DCEL.faces.push({"edgeID": 0});
+
+	DCEL.edges.push({"vBID": 0, "fRID": 0, "eNID": 2, "eTID": 1});
+	DCEL.edges.push({"vBID": 1, "fRID": -1, "eNID": 5, "eTID": 0});
+
+	DCEL.edges.push({"vBID": 1, "fRID": 0, "eNID": 4, "eTID": 3});
+	DCEL.edges.push({"vBID": 2, "fRID": -1, "eNID": 3, "eTID": 2});
+
+	DCEL.edges.push({"vBID": 2, "fRID": 0, "eNID": 0, "eTID": 5});
+	DCEL.edges.push({"vBID": 0, "fRID": -1, "eNID": 1, "eTID": 4});
+
+	//Return middle point to use as the fixed point
+	//TODO: remove noise
+	return getPoint(midx+noise, midy+noise);
+}
+
+/**
+ * Calculates the enclosing box.
+ *
+ * @param      {"x","y"}  points  Set of points
+ * @return     {"minx","miny","maxx","maxy"}  Min and max components for x and y (the enclosing box).
+ */
+function calculateEnclosingBox(points) {
+	let result = {"minx" : points[0].x, "miny" : points[0].y, "maxx" : points[0].x, "maxy" : points[0].y};
+	for (let i = 1; i < points.length; i++) {
+		if(points[i].x < result.minx) result.minx = points[i].x;
+		else if(points[i].x > result.maxx) result.maxx = points[i].x;
+		if(points[i].y < result.miny) result.miny = points[i].y;
+		else if(points[i].y > result.maxy) result.maxy = points[i].y;
+	}
+	return result;
+}
+
 
 /****************************************************/
 /********************* OUTPUT ***********************/
