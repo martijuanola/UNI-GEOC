@@ -9,6 +9,7 @@
 	<script type="text/javascript" src="Lanzarote.json.js"></script>
 	<script type="text/javascript" src="Lanzarote-small.json.js"></script>
 	<script type="text/javascript" src="Lanzarote-degen.json.js"></script>
+	<script type="text/javascript" src="toy_example.json.js"></script>
 
 	<!---- External library to handle zoom and pan ---->
 	<script type="text/javascript" src="zoompan.js"></script>
@@ -51,7 +52,6 @@ var boundaries; // This will be used in Lab 5
 var extents; // Required to fit points to canvas
 var triangles; // Used to store the resulting triangles of the triangulation
 
-console.log("hola");
 applyDataSet();
 
 // Computes the point set extents
@@ -214,9 +214,13 @@ function applyDataSet() {
 			inputJSON = inputJSON_lanzarote_degen;
 			console.log("Change to Lanzarote (degen)");
 			break;
+		case "4":
+			inputJSON = inputJSON_toy;
+			console.log("Change to Toy");
+			break;
 		default:
-			inputJSON = inputJSON_lanzarote_small;
-			console.log("Change to Lanzarote (small");
+			inputJSON = inputJSON_toy;
+			console.log("Change to Toy");
 	}
 	points = JSON.parse(JSON.stringify(inputJSON.points)); // Requires inputJSON variable set in file
 	pointsPointer = inputJSON.points; // Requires inputJSON variable set in file
@@ -244,6 +248,7 @@ function applyDataSet() {
 
 
 	  <select id="dataset" onchange="changeDataSet()">
+	  	<option value = 4>Toy</option>
 	    <option value = 1>Lanzarote (small)</option>
 	    <option value = 2>Lanzarote</option>
 	    <option value = 3>Lanzarote (degen)</option>

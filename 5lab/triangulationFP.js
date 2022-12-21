@@ -132,7 +132,7 @@ function updateDCEL(pIndex, newPoint, f1ID, fp, fixedPointFaceID, DCEL) {
 	const v2ID = e2.vBID;
 	const v3ID = e3.vBID;
 
-
+	// New vertex
 	const v4ID = numV;
 	
 	const f2ID = numF;
@@ -169,16 +169,15 @@ function updateDCEL(pIndex, newPoint, f1ID, fp, fixedPointFaceID, DCEL) {
 	e2.eNID = e6ID;
 	e3.eNID = e4ID;
 
-	//Modify fixedPointFaceID
-	if(pointInTriangle(fp, getTriangleFromFace(DCEL.faces[numF], DCEL)) > 0) {
-		// console.log("FPFID changed(1)");
-		return numF;
+	//Perform Necessary Flips
+	delaunayfy(v4ID, DCEL);
+
+	//Update FixedPointFaceID
+	const facesIDs = getIncidentFacesIDs(v4ID, DCEL);
+	for (let i = 0; i < facesIDs.length; i++) {
+		if(pointInTriangle(fp, getTriangleFromFace(DCEL.faces[facesIDs[i]], DCEL)) > 0) return facesIDs[i];
 	}
-	else if(pointInTriangle(fp, getTriangleFromFace(DCEL.faces[numF+1], DCEL)) > 0) {
-		// console.log("FPFID changed(2)");
-		return numF+1;
-	}
-	else return fixedPointFaceID;
+	return fixedPointFaceID;
 }
 
 function findTouchingEdgeID(faceID, p, DCEL) {
@@ -226,6 +225,8 @@ function updateDCELDegen(pIndex, newPoint, f1ID, e0ID, fp, fixedPointFaceID, DCE
 	const v3ID = e3.vBID;
 	const v4ID = e4.vBID;
 	let v1 = DCEL.vertexs[v1ID];
+
+	//NEW VERTEX
 	const v5ID = numV;
 
 	let f1 = DCEL.faces[f1ID];
@@ -272,34 +273,166 @@ function updateDCELDegen(pIndex, newPoint, f1ID, e0ID, fp, fixedPointFaceID, DCE
 	DCEL.edges.push({"vBID": v5ID, "fRID": f4ID, "eNID": e4ID, "eTID": e6ID}); //e6T
 	DCEL.edges.push({"vBID": v5ID, "fRID": f3ID, "eNID": e1ID, "eTID": e7ID}); //e7T
 	
-	//Modify Fixed Point
-	if(pointInTriangle(fp, getTriangleFromFace(f1, DCEL)) > 0) {
-		// console.log("FPFID changed(1)");
-		return f1ID;
+	//Perform Necessary Flips
+	delaunayfy(v5ID, DCEL);
+
+	//Update FixedPointFaceID
+	const facesIDs = getIncidentFacesIDs(v5ID, DCEL);
+	for (let i = 0; i < facesIDs.length; i++) {
+		if(pointInTriangle(fp, getTriangleFromFace(DCEL.faces[facesIDs[i]], DCEL)) > 0) return facesIDs[i];
 	}
-	else if(pointInTriangle(fp, getTriangleFromFace(f2, DCEL)) > 0) {
-		// console.log("FPFID changed(2)");
-		return f2ID;
-	}
-	else if(pointInTriangle(fp, getTriangleFromFace(f3, DCEL)) > 0) {
-		// console.log("FPFID changed(3)");
-		return f3ID;
-	}
-	else if(pointInTriangle(fp, getTriangleFromFace(f4, DCEL)) > 0) {
-		// console.log("FPFID changed(4)");
-		return f4ID;
-	}
-	else return fixedPointFaceID;
+	return fixedPointFaceID;
 }
 
 /****************************************************/
-/******************* DELAUNY FLIPS ******************/
+/******************* DELAUNAY FLIPS ******************/
 /****************************************************/
 
-function checkIfDelaunay(vertex, DCEL) {}
+function delaunayfy(vID, DCEL) {
+	const p = DCEL.vertexs[vID]
 
-function delaunayFlip() {}
+	//For each incident face only one other face has to be checked
+	let incidentFacesToCheck = getIncidentFacesIDs(vID, DCEL);
 
+	while (incidentFacesToCheck.length > 0) {
+		const fID = incidentFacesToCheck.pop()
+		const fTID = getOpositeFaceID(vID, fID, DCEL);
+		if (fTID != -1) {
+			const fT = DCEL.faces[fTID];
+			//Maybe when point is in the edge should be considered?
+			const check = pointInCircle(getPointFromVertex(p), getPointsOfFace(fT, DCEL));
+			if (check == 1) {
+				delaunayFlip(vID, fID, fTID, DCEL);
+				incidentFacesToCheck.push(fID);
+				incidentFacesToCheck.push(fTID);
+			}
+		}
+	}
+}
+
+function delaunayFlip(v0ID, f1ID, f2ID, DCEL) {
+	//faces
+	let f1 = DCEL.faces[f1ID];
+	let f2 = DCEL.faces[f2ID];
+
+	//edges
+	const ceID = getOpositeEdgeID(v0ID, f1ID, DCEL);
+	let ce = DCEL.edges[ceID];
+	const ceTID = ce.eTID;
+	let ceT = DCEL.edges[ceTID];
+
+	const e4ID = ce.eNID;
+	let e4 = DCEL.edges[ce.eNID];
+	const e1ID = e4.eNID;
+	let e1 = DCEL.edges[e1ID];
+
+	const e2ID = ceT.eNID;
+	let e2 = DCEL.edges[e2ID];
+	const e3ID = e2.eNID;
+	let e3 = DCEL.edges[e3ID];
+
+	//vertexs
+	const v1ID = e2.vBID;
+	const v2ID = e3.vBID;
+	const v3ID = e4.vBID;
+
+	let v0 =DCEL.vertexs[v0ID];
+	let v1 =DCEL.vertexs[v1ID];
+	let v2 =DCEL.vertexs[v2ID];
+	let v3 =DCEL.vertexs[v3ID];
+
+	//MODIFICAR VERTEXS
+	v0.edgeID = e1ID;
+	v1.edgeID = e2ID;
+	v2.edgeID = e3ID;
+	v3.edgeID = e4ID;
+
+	//MODIFICAR FACES
+	f1.edgeID = e1ID;
+	f2.edgeID = e3ID;
+
+	//MODIFICAR EDGES
+	//ce and cte
+	ce.vBID = v2ID;
+	ce.fRID = f1ID;
+	ce.eNID = e1ID;
+
+	ceT.vBID = v0ID;
+	ceT.fRID = f2ID;
+	ceT.eNID = e3ID;
+
+	//minor
+	e1.eNID = e2ID;
+
+	e2.eNID = ceID;
+	e2.fRID = f1ID;
+
+	e3.eNID = e4ID;
+	e3.fRID = f2ID;
+
+	e4.eNID = ceTID;
+	e4.fRID = f2ID;
+}
+
+/**
+ * Works assuming that vertexs edges are outgoing edges.
+ *
+ * @param      {int}  vID     The vertex ID
+ * @param      {DCEL}  DCEL    The dcel
+ * @return     {[]}   Set of faces IDs incident to vID
+ */
+function getIncidentFacesIDs(vID, DCEL) {
+	let fIDs = [];
+
+	const v = DCEL.vertexs[vID];
+	const firstEdgeID = v.edgeID;
+
+	let first = true;
+	let currentEdgeID = firstEdgeID;
+	while (currentEdgeID != firstEdgeID || first) {
+		const currentEdge = DCEL.edges[currentEdgeID];
+		
+		//Assert
+		if (currentEdge.vBID != vID) throw "Something went wrong with getIncidentFacesIDs";
+
+		//Add face
+		fIDs.push(currentEdge.fRID);
+
+		//Find new edge (next, next, oposite)
+		const nextEdge = DCEL.edges[currentEdge.eNID];
+		const nextEdge2 = DCEL.edges[nextEdge.eNID];
+		currentEdgeID = nextEdge2.eTID;
+
+		first = false;
+	}
+	return fIDs;
+}
+
+/**
+ * Gets touching faces of a faces oposite to a point of the face.
+ */
+function getOpositeFaceID(vID, fID, DCEL) {
+	const touchingEdge = DCEL.edges[getOpositeEdgeID(vID, fID, DCEL)];
+	const touchingEdgeT = DCEL.edges[touchingEdge.eTID];
+	return touchingEdgeT.fRID;
+}
+
+/**
+ * Gets oposite edges of a point in a faces.
+ */
+function getOpositeEdgeID(vID, fID, DCEL) {
+	const face1 = DCEL.faces[fID];
+	const e1 = DCEL.edges[face1.edgeID];
+	if (e1.vBID == vID) return e1.eNID;
+	else {
+		const e1T = DCEL.edges[e1.eTID];
+		if (e1T.vBID == vID) {
+			const e2 = DCEL.edges[e1.eNID];
+			return e2.eNID;
+		}
+		else return face1.edgeID;
+	}
+}
 
 /****************************************************/
 /**************** OBJECT CONVERSIONS ****************/
@@ -326,7 +459,30 @@ function getPointFromVertex(vertex) {
 	return {"x": vertex.x, "y": vertex.y};
 }
 
+/***********************/
 
+/**
+ * Get vIDs of the Face
+ *
+ * @param      {<type>}  face    The face
+ * @param      {<type>}  edges   The edges
+ */
+function getVertexsOfFace(face, DCEL) {
+	let r = [];
+	let e = DCEL.edges[face.edgeID];
+	for(let i = 0; i < 3; i++) {
+		r.push(DCEL.vertexs[e.vBID]);
+		e = DCEL.edges[e.eNID];
+	}
+	return r;
+}
+
+function getPointsOfFace(face, DCEL) {
+	const vs = getVertexsOfFace(face, DCEL);
+	return [getPointFromVertex(vs[0]), getPointFromVertex(vs[1]), getPointFromVertex(vs[2])];
+}
+
+/***********************/
 
 function getSegment(p1, p2) {
 	return {"from": p1, "to": p2};
@@ -549,7 +705,7 @@ function sortCircleCounterclockwise(cp) {
  * @param      {point[]} 3 points defining the circle
  * @return 0 - OUTSIDE || 1 - INSIDE || 2 - EDGE
  */
-function classifyPoint(p, cp) {
+function pointInCircle(p, cp) {
   sortCircleCounterclockwise(cp);
 
   let c11 = cp[1].x-cp[0].x;
@@ -665,22 +821,6 @@ function getTriangles(outputTriangles, DCEL) {
 		const vs = getVertexsOfFace(DCEL.faces[i], DCEL);
 		outputTriangles.push([vs[0].pointsIndex, vs[1].pointsIndex, vs[2].pointsIndex]);
 	}
-}
-
-/**
- * Get vIDs of the Face
- *
- * @param      {<type>}  face    The face
- * @param      {<type>}  edges   The edges
- */
-function getVertexsOfFace(face, DCEL) {
-	let r = [];
-	let e = DCEL.edges[face.edgeID];
-	for(let i = 0; i < 3; i++) {
-		r.push(DCEL.vertexs[e.vBID]);
-		e = DCEL.edges[e.eNID];
-	}
-	return r;
 }
 
 
