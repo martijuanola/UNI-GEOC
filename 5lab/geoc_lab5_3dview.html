@@ -1,27 +1,28 @@
- <html> 
-      <head> 
-      <title>GEOC - Lab 5</title> 
-      </head>
+<html> 
+	<head> 
+		<title>GEOC - Lab 5</title> 
+	</head>
 
-      <body>
+	<body>
+	<h1>GEOC - Lab 5</h1>
 
-      <h1>GEOC - Lab 5</h1>
+  <script src="math.min.js"></script>
+  <script src="three.min.js"></script>
+  <script src="OrbitControls.js"></script>
+  
+  <script type="text/javascript" src="Lanzarote-small.json.js"></script>
+  <!----<script type="text/javascript" src="Lanzarote-degen.json.js"></script>---->
+  <!----<script type="text/javascript" src="Lanzarote.json.js"></script>---->
+	
+	<!---- Prune Boundaries code ---->
+	<script type="text/javascript" src="pruneBoundaries.js"></script>
 
-      <script src="math.min.js"></script>
-	  <script src="three.min.js"></script>
-	  <script src="OrbitControls.js"></script>
-	  
-	  <script type="text/javascript" src="Lanzarote-small.json.js"></script>
-	  <!----<script type="text/javascript" src="Lanzarote-degen.json.js"></script>---->
-	  <!----<script type="text/javascript" src="Lanzarote.json.js"></script>---->
-		
-	  <!---- This is were your triangulation code will be ---->
-      <script type="text/javascript" src="triangulation.js"></script>
-    
-      <script type="text/javascript">
+  <!---- Triangulation code ---->
+  <script type="text/javascript" src="triangulationFP.js"></script>
+
+  <script type="text/javascript">
 	
 		function computeExtents(points) {
-			
 			var extents = {"xmin":Number.MAX_VALUE, "xmax":-Number.MAX_VALUE, "ymin":Number.MAX_VALUE, "ymax":-Number.MAX_VALUE,"zmin":Number.MAX_VALUE, "zmax":-Number.MAX_VALUE };
 			
 			for (var i = 0; i < points.length; i++) {
@@ -80,6 +81,7 @@
 	 
 		// This is the input
 		var points = inputJSON_lanzarote_small.points; // Requires inputJSON variable set in json.js file
+		var boundaries = inputJSON_lanzarote_small.boundaries;
 		var extents = computeExtents(points);
 
         /**
@@ -115,9 +117,9 @@
 			vertices[i] = [points[i].x, points[i].y];
 		}
 		
-		// IMPORTANT Here we invoke the triangulation method
-		//           Make sure your methods returns the triangles AFTER PRUNNING boundaries
-		var triangles = computeTriangulation(points);
+		let DCEL = {"vertexs": [], "faces": [], "edges": [], "pointToVertexID": {}};
+		var triangles = computeTriangulation(points, DCEL);
+		var triangles = pruneBoundaries(points, boundaries, DCEL);
 			
 		for (var i=0;i<triangles.length;i++) {
 			scene.add(createTriangleMesh(triangles[i]));

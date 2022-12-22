@@ -10,6 +10,7 @@
 	<script type="text/javascript" src="Lanzarote-small.json.js"></script>
 	<script type="text/javascript" src="Lanzarote-degen.json.js"></script>
 	<script type="text/javascript" src="toy_example.json.js"></script>
+	<script type="text/javascript" src="toy_example_degen.json.js"></script>
 
 	<!---- External library to handle zoom and pan ---->
 	<script type="text/javascript" src="zoompan.js"></script>
@@ -18,10 +19,11 @@
 	<script type="text/javascript" src="../math.js"></script> <!-- For me -->
 	<script type="text/javascript" src="math.js"></script> <!-- For you -->
 
+	<!---- Prune Boundaries code ---->
+	<script type="text/javascript" src="pruneBoundaries.js"></script>
+
 	<!---- Triangulation code ---->
 	<script type="text/javascript" src="triangulationFP.js"></script>
-	<!-- <script type="text/javascript" src="triangulation.js"></script> -->
-
 
 <script type="text/javascript">
 
@@ -43,7 +45,11 @@ style = {
   }
 }
 
+//==== Extra information of Triangulation ======//
 
+let DCEL = {"vertexs": [], "faces": [], "edges": [], "pointToVertexID": {}};
+
+//========= -------------------------- =========//
 // This is the actual input
 var points; // Requires inputJSON variable set in file
 var boundaries; // This will be used in Lab 5
@@ -181,13 +187,30 @@ function doTriangulate() {
 	
 	console.log("TRAINGULATION STARTED!");
 	var t0 = performance.now();
-	triangles = computeTriangulation(points); // This function is in triangulation.js
+	triangles = computeTriangulation(points, DCEL); // This function is in triangulation.js
 	var t1 = performance.now();
 	console.log("TRAINGULATION DONE!");
 
 	// Log time
 	var string = "Vertices: " + points.length + ". Triangles: " + triangles.length;
 	string += ". Triangulation time: " + (t1 - t0).toFixed(0) + " milliseconds.";
+	console.log(string)
+	// Also show it in page
+	document.getElementById("time_label").innerHTML=string;
+	extents = computeExtents(points);
+	redraw();
+}
+
+function doPruneBoundaries() {
+	console.log("PROUNING BOUNDARIES(START)!");
+	var t0 = performance.now();
+	triangles = pruneBoundaries(points, boundaries, DCEL); // This function is in pruneBoundaries.js
+	var t1 = performance.now();
+	console.log("PROUNING BOUNDARIES(END)!");
+
+	// Log time
+	var string = "Vertices: " + points.length + ". Triangles: " + triangles.length;
+	string += ". Prouning time: " + (t1 - t0).toFixed(0) + " milliseconds.";
 	console.log(string)
 	// Also show it in page
 	document.getElementById("time_label").innerHTML=string;
@@ -218,6 +241,10 @@ function applyDataSet() {
 			inputJSON = inputJSON_toy;
 			console.log("Change to Toy");
 			break;
+		case "5":
+			inputJSON = inputJSON_toy_degen;
+			console.log("Change to Toy (degen)");
+			break;
 		default:
 			inputJSON = inputJSON_toy;
 			console.log("Change to Toy");
@@ -246,9 +273,9 @@ function applyDataSet() {
 	<!---- This button will be used in lab 5 ----->
 	<button onclick="doPruneBoundaries()">Prune boundaries</button>
 
-
 	  <select id="dataset" onchange="changeDataSet()">
 	  	<option value = 4>Toy</option>
+	  	<option value = 5>Toy (degen)</option>
 	    <option value = 1>Lanzarote (small)</option>
 	    <option value = 2>Lanzarote</option>
 	    <option value = 3>Lanzarote (degen)</option>

@@ -23,34 +23,30 @@
  Triangles should be return as arrays of array of indexes
  e.g., [[1,2,3],[2,3,4]] encodes two triangles, where the indices are relative to the array points
 **/
-function computeTriangulation(points) {
+function computeTriangulation(points, DCEL) {
 	const n = points.length;
 
-	let outputTriangles = [];
-	let DCEL = {"vertexs": [], "faces": [], "edges": []}
-	const fixedPoint = addEncolsingTriangle(points, n, outputTriangles, DCEL);
+	resetDCEL(DCEL);
+	
+	const fixedPoint = addEncolsingTriangle(points, n, DCEL);
 	let fixedPointFaceID = 0; 
 	
 	for (let i = 0; i < n; i++) { //should not get last 3 added points
-		// console.log("----------------------");
-		// console.log("POINT " + i);
-		
 		const faceID = findFaceID(points[i], fixedPoint, fixedPointFaceID, DCEL);
 		if (pointInTriangle(points[i], getTriangleFromFace(DCEL.faces[faceID], DCEL)) == 2) {
-			// console.log("DEGENERATE CASE");
 			const edgeID = findTouchingEdgeID(faceID, points[i], DCEL);
 			fixedPointFaceID = updateDCELDegen(i, points[i], faceID, edgeID, fixedPoint, fixedPointFaceID, DCEL);
 		}
 		else fixedPointFaceID = updateDCEL(i, points[i], faceID, fixedPoint, fixedPointFaceID, DCEL);
-		
-		// console.log("UPDATED DCEL", DCEL);
-		// console.log("NEW FIXED POINT FACE ID", fixedPointFaceID);
-		// console.log("----------------------");
 	}
 
-	getTriangles(outputTriangles, DCEL);
+	return getTriangles(DCEL);
+}
 
-	return outputTriangles;
+function resetDCEL(DCEL) {
+	DCEL.vertexs = [];
+	DCEL.faces = [];
+	DCEL.edges = [];
 }
 
 
@@ -147,7 +143,8 @@ function updateDCEL(pIndex, newPoint, f1ID, fp, fixedPointFaceID, DCEL) {
 
 	//Add vertex
 	DCEL.vertexs.push({"x": newPoint.x, "y": newPoint.y, "edgeID": e4IDT, "pointsIndex": pIndex});
-	
+	DCEL.pointToVertexID[pIndex] = numV;
+
 	//Add faces
 	DCEL.faces.push({"edgeID": e2ID});
 	DCEL.faces.push({"edgeID": e3ID});
@@ -235,6 +232,7 @@ function updateDCELDegen(pIndex, newPoint, f1ID, e0ID, fp, fixedPointFaceID, DCE
 
 	//VERTEXS
 	DCEL.vertexs.push({"x": newPoint.x, "y": newPoint.y, "edgeID": e0IDT, "pointsIndex": pIndex});
+	DCEL.pointToVertexID[pIndex] = numV;
 	v1.edgeID = e1ID;
 
 	//FACES
@@ -751,7 +749,7 @@ const noise = 1;
  * @param      {Array}   edges            The edges
  * @return     {Object}  Fixed point
  */
-function addEncolsingTriangle(points, n, outputTriangles, DCEL) {
+function addEncolsingTriangle(points, n, DCEL) {
 	
 	const eBox = calculateEnclosingBox(points);
 
@@ -766,9 +764,14 @@ function addEncolsingTriangle(points, n, outputTriangles, DCEL) {
 	points.push({"x": Math.ceil(midx+side/2)+noise,"y": eBox.miny-noise});  //C
 
 	//MODIFY INTERNAL DATA STRUCTURES
+	const numV = DCEL.vertexs.length;
 	DCEL.vertexs.push({"x": points[n].x, "y": points[n].y, "edgeID": 0, "pointsIndex": n});
 	DCEL.vertexs.push({"x": points[n+1].x, "y": points[n+1].y, "edgeID": 2, "pointsIndex": n+1});
 	DCEL.vertexs.push({"x": points[n+2].x, "y": points[n+2].y, "edgeID": 4, "pointsIndex": n+2});
+
+	DCEL.pointToVertexID[n] = numV;
+	DCEL.pointToVertexID[n+1] = numV+1;
+	DCEL.pointToVertexID[n+2] = numV+2;
 
 	DCEL.faces.push({"edgeID": 0});
 
@@ -808,19 +811,13 @@ function calculateEnclosingBox(points) {
 /********************* OUTPUT ***********************/
 /****************************************************/
 
-/**
- * Updates outputTriangles structure from DCEL data.
- *
- * @param      {<type>}  outputTriangles  The output triangles
- * @param      {<type>}  vertexs          The vertexs
- * @param      {<type>}  faces            The faces
- * @param      {<type>}  edges            The edges
- */
-function getTriangles(outputTriangles, DCEL) {
+function getTriangles(DCEL) {
+	let outputTriangles = [];
 	for (let i = 0; i < DCEL.faces.length; i++) {
 		const vs = getVertexsOfFace(DCEL.faces[i], DCEL);
 		outputTriangles.push([vs[0].pointsIndex, vs[1].pointsIndex, vs[2].pointsIndex]);
 	}
+	return outputTriangles;
 }
 
 

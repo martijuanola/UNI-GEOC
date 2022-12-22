@@ -11,4 +11,4 @@ var inputJSON_toy = {'point_radius':5, 'point_width':1,
 {'x':30, 'y':10, 'z':200.0},
 {'x':18, 'y':20, 'z':100.0}
 ],
-boundaries:[[0,3,6,7,1],[4,9,8]]};
+boundaries:[[1,7,6,3,0],[8,9,4]]};
