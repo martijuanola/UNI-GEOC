@@ -53,11 +53,9 @@ function pruneRegion(points, region, deletedFacesIDs, DCEL) {
 		const pVID = DCEL.pointToVertexID[region[(pb-1+region.length)%region.length]];
 		const cVID = DCEL.pointToVertexID[region[pb]];
 		const nVID = DCEL.pointToVertexID[region[(pb+1)%region.length]];
-		console.log("(" + DCEL.vertexs[cVID].x + ", " + DCEL.vertexs[cVID].y + ")")
 
 		const outgoingEdgesIDs = getOutgoingEdgesIDs(cVID, DCEL);
 		const outEdges = outgoingEdgesIDs.length;
-		console.log(outgoingEdgesIDs);
 
 		let nextEdgeID = null; // (c --> n)
 		let prevEdgeTID = null; // it is the t edge because it's outgoing (c --> p)
@@ -77,24 +75,14 @@ function pruneRegion(points, region, deletedFacesIDs, DCEL) {
 				prevEdgeIndex = e;
 			}
 		}
-		console.log(nextEdgeID + ", " + prevEdgeTID);
-
-		// if (nextEdgeID == null) {
-		// 	throw "CAS DIFICIL AMB NEXT!"
-		// }
-
-		// if (prevEdgeTID == null) {
-		// 	throw "CAS DIFICIL AMB PREV!"
-		// }
 
 		if (nextEdgeID != null && prevEdgeTID != null) {
-			console.log("both indexes found")
 			// p(no inclos) --> n(inclos)
 			for (let e = (prevEdgeIndex+1)%outEdges; e != (nextEdgeIndex+1)%outEdges; e = (e+1)%outEdges) {
-				console.log(e + " till " + (nextEdgeIndex+1))
 				removeFaceFromEdge(outgoingEdgesIDs[e], deletedFacesIDs, DCEL);
 			}
 		}
+		//else throw "Dificult Cases!"
 	}
 }
 
@@ -129,7 +117,7 @@ function getOutgoingEdgesIDs(vID, DCEL) {
  * Marks a face to be removed
  */
 function removeFaceFromEdge(eID, deletedFacesIDs, DCEL) {
-	console.log(eID + " was deleted!")
+	// console.log(eID + " was deleted!")
 	const edge = DCEL.edges[eID];
 	deletedFacesIDs[edge.fRID] = false;
 }
@@ -143,7 +131,8 @@ function getNotDeletedTriangles(deletedFacesIDs, DCEL) {
 	for (let i = 0; i < DCEL.faces.length; i++) {
 		if (deletedFacesIDs[i]) {
 			const vs = getVertexsOfFace(DCEL.faces[i], DCEL);
-			outputTriangles.push([vs[0].pointsIndex, vs[1].pointsIndex, vs[2].pointsIndex]);
+			//2 before 1 because the 3d visualization(triangle need to be defined counterclockwise)
+			outputTriangles.push([vs[0].pointsIndex, vs[2].pointsIndex, vs[1].pointsIndex]);
 		}
 	}
 	return outputTriangles;
